@@ -8,6 +8,7 @@ namespace Simbirsoft_Weather.Models
 {
     public class LoginModel
     {
+
         [Required]
         [Display(Name = "e-mail")]
         public string Email { get; set; }
@@ -20,6 +21,13 @@ namespace Simbirsoft_Weather.Models
         [Display(Name = "Запомнить меня")]
         public bool RememberMe { get; set; }
 
-       
     }
+
+    public class LoginViewModel
+    {
+        public EditModel EditModel { get; set; }
+
+        public LoginModel LoginModel { get; set; }
+    }
+
 }

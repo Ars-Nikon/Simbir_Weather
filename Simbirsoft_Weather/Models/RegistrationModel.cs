@@ -10,7 +10,6 @@ namespace Simbirsoft_Weather.Models
     public class RegistrationModel
     {
 
-
         [EmailAddress(ErrorMessage = "Некорректный адрес")]
         [Display(Name = "Ваш e-mail:")]
         public string Email { get; set; }

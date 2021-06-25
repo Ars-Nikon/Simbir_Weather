@@ -1,26 +1,103 @@
 ﻿@{
 }
-@model Simbirsoft_Weather.Models.LoginModel
+@model Simbirsoft_Weather.Models.LoginViewModel
 
+@if (User.Identity.IsAuthenticated)
+{
+    <h1 class="text-center">Добрый день @Model.EditModel?.Name</h1>
+
+
+
+    <fieldset class="form-group">
+        <h2 class="text-left">Изменить Почту</h2>
+        <form method="post" asp-controller="Account" asp-action="EditEmail">
+            <fieldset class="form-group">
+                <label asp-for="@Model.EditModel.Email">е-mail</label><br />
+                <input type="email" asp-for="@Model.EditModel.Email" autocomplete="off" />
+                <span class="text-danger" asp-validation-for="@Model.EditModel.Email"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <div>
+                    <label asp-for="@Model.EditModel.Password">Подтвердите пароль для смены e-mail</label><br />
+                    <input id="password-input" autocomplete="off" type="password" asp-for="@Model.EditModel.Password" />
+                    <span class="text-danger" asp-validation-for="@Model.EditModel.Password"></span>
+                    <br />
+                </div>
+                <div>
+                    <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
+                </div>
+            </fieldset>
+            <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+        </form>
+    </fieldset>
+    <fieldset class="form-group">
+        <h2 class="text-left">Изменить Пол</h2>
+        <form method="post" asp-controller="Account" asp-action="EditGender">
+            <div>
+                <label asp-for="@Model.EditModel.Gender">Женский</label>
+                <input type="radio" asp-for="@Model.EditModel.Gender" value="true">
+                <label asp-for="@Model.EditModel.Gender">Мужской</label>
+                <input type="radio" asp-for="@Model.EditModel.Gender" value="false" />
+            </div>
+            <div>
+                <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+            </div>
+        </form>
+    </fieldset>
+    <fieldset class="form-group">
+        <h2 class="text-left">Изменить Имя</h2>
+        <form method="post" asp-controller="Account" asp-action="EditName">
+            <fieldset class="form-group">
+                <label asp-for="@Model.EditModel.Name">Имя</label><br />
+                <input asp-for="@Model.EditModel.Name" autocomplete="off" />
+                <span class="text-danger" asp-validation-for="EditModel.Name"></span>
+            </fieldset>
+            <div>
+                <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+            </div>
+        </form>
+    </fieldset>
+    <fieldset class="form-group">
+        <h2 class="text-left">Изменить Город</h2>
+        <form method="post" asp-controller="Account" asp-action="EditRegion">
+            <fieldset class="form-group">
+                <label asp-for="EditModel.Region" class="form-label">Город</label>
+                <input type="text" list="Region1" asp-for="EditModel.Region" class="form-control" />
+                <datalist id="Region1">
+                    @foreach (var item in ViewBag.Cities)
+                    {
+                        <option>@item.City_Ru</option>
+                    }
+                </datalist>
+                <span class="text-danger" asp-validation-for="EditModel.Region"></span>
+            </fieldset>
+            <div>
+                <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+            </div>
+        </form>
+    </fieldset>
+}
+else
+{
     <div class="container">
         <form method="post" asp-controller="Account" asp-action="Login">
 
             <div asp-validation-summary="All"></div>
 
             <fieldset class="form-group">
-                <label asp-for="@Model.Email"></label><br />
-                <input asp-for="@Model.Email" autocomplete="off" />
-                <span asp-validation-for="@Model.Email"></span>
+                <label asp-for="@Model.LoginModel.Email"></label><br />
+                <input type="email" asp-for="@Model.LoginModel.Email" autocomplete="off" />
+                <span asp-validation-for="@Model.LoginModel.Email"></span>
             </fieldset>
 
             <fieldset class="form-group">
-                <label asp-for="@Model.Password"></label><br />
-                <input type="password" id="password-input" autocomplete="off" asp-for="@Model.Password">
+                <label asp-for="@Model.LoginModel.Password"></label><br />
+                <input type="password" id="password-input" autocomplete="off" asp-for="@Model.LoginModel.Password">
                 <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
                 <br />
 
-                <label asp-for="@Model.RememberMe"></label><br />
-                <input asp-for="@Model.RememberMe" autocomplete="off" />
+                <label asp-for="@Model.LoginModel.RememberMe"></label><br />
+                <input asp-for="@Model.LoginModel.RememberMe" autocomplete="off" />
 
             </fieldset>
             <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Вход" />
@@ -28,16 +105,16 @@
 
 
         </form>
-
-
-        <script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js"></script>
-        <script>
-            $('body').on('click', '.password-checkbox', function () {
-                if ($(this).is(':checked')) {
-                    $('#password-input').attr('type', 'text');
-                } else {
-                    $('#password-input').attr('type', 'password');
-                }
-            });
-        </script>
     </div>
+}
+
+<script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    $('body').on('click', '.password-checkbox', function () {
+        if ($(this).is(':checked')) {
+            $('#password-input').attr('type', 'text');
+        } else {
+            $('#password-input').attr('type', 'password');
+        }
+    });
+</script>

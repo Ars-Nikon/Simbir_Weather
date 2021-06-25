@@ -25,8 +25,10 @@ namespace Simbirsoft_Weather.Controllers
 
         public IActionResult Index()
         {
-           
-            return View();
+
+            var wheather = new Wheather_api("Краснодар");
+            var wheather5days = wheather.WheatherFor5Day();
+            return View(new IndexModel {Wheathers= wheather5days,Region = "Краснодар" });
         }
 
 

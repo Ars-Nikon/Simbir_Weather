@@ -14,6 +14,6 @@ namespace Simbirsoft_Weather.Models
 
         public DateTime Date{ get; set; }
 
-        public bool Gender { get; set; }
+        public bool? Gender { get; set; }
     }
 }

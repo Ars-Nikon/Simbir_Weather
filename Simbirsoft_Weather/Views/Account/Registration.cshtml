@@ -26,8 +26,8 @@
             </fieldset>
             <fieldset class="form-group">
                 <label asp-for="Region" class="form-label"></label>
-                <input type="text" list="Region" asp-for="Region" class="form-control" />
-                <datalist id="Region">
+                <input type="text" list="Region1" asp-for="Region" class="form-control" />
+                <datalist id="Region1">
                     @foreach (var item in ViewBag.Cities)
                     {
                         <option>@item.City_Ru</option>
@@ -53,7 +53,7 @@
                 <div>
                     <label asp-for="PasswordConfirm"></label><br />
                     <input id="password-input2" type="password" autocomplete="off" asp-for="PasswordConfirm" />
-                    <label><input type="checkbox" class="password-checkbox" autocomplete="off">  Show Password</label>
+                    <label><input type="checkbox" class="password-checkbox" autocomplete="off">Показать пароль</label>
                 </div>
             </fieldset>
             <div>

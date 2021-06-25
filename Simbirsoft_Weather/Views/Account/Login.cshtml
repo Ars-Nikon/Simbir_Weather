@@ -1,0 +1,43 @@
+﻿@{
+}
+@model Simbirsoft_Weather.Models.LoginModel
+
+    <div class="container">
+        <form method="post" asp-controller="Account" asp-action="Login">
+
+            <div asp-validation-summary="All"></div>
+
+            <fieldset class="form-group">
+                <label asp-for="@Model.Email"></label><br />
+                <input asp-for="@Model.Email" autocomplete="off" />
+                <span asp-validation-for="@Model.Email"></span>
+            </fieldset>
+
+            <fieldset class="form-group">
+                <label asp-for="@Model.Password"></label><br />
+                <input type="password" id="password-input" autocomplete="off" asp-for="@Model.Password">
+                <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
+                <br />
+
+                <label asp-for="@Model.RememberMe"></label><br />
+                <input asp-for="@Model.RememberMe" autocomplete="off" />
+
+            </fieldset>
+            <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Вход" />
+            <a asp-action="Registration" class="btn btn-dark btn-lg pull-right">Регистрация</a>
+
+
+        </form>
+
+
+        <script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            $('body').on('click', '.password-checkbox', function () {
+                if ($(this).is(':checked')) {
+                    $('#password-input').attr('type', 'text');
+                } else {
+                    $('#password-input').attr('type', 'password');
+                }
+            });
+        </script>
+    </div>

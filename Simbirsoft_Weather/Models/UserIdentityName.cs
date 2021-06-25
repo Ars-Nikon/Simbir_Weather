@@ -21,6 +21,10 @@ namespace Simbirsoft_Weather.Models
         public async Task<IViewComponentResult> InvokeAsync(string UserName)
         {
             var result = await _userManager.FindByNameAsync(UserName);
+            if (result == null)
+            {
+                return new HtmlContentViewComponentResult(new HtmlString("No Name"));
+            }
             if (result.Name == null)
             {
                 return new HtmlContentViewComponentResult(new HtmlString("No Name"));

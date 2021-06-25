@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
+
 
 namespace Simbirsoft_Weather.Models
 {
@@ -24,7 +24,7 @@ namespace Simbirsoft_Weather.Models
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         public string PasswordConfirm { get; set; }
 
-        [Display(Name = "Ваш e-mail:")]
+        [Display(Name = "Ваше имя:")]
         [Required(ErrorMessage = "Не указано имя")]
         public string Name { get; set; }
 

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Simbirsoft_Weather.Models;
+using Simbirsoft_Weather.Services;
 
 namespace Simbirsoft_Weather
 {
@@ -32,6 +33,7 @@ namespace Simbirsoft_Weather
             services.AddDbContext<CityContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("CityConnection")));
 
+            services.AddScoped<IClothingConsultant, ClothingConsultant>();
 
             services.AddIdentity<User, IdentityRole>(opts =>
             {

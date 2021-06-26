@@ -7,6 +7,8 @@ namespace Simbirsoft_Weather.Models
 {
     public class EditModel
     {
+        public string Result { get; set; }
+
         public string Email { get; set; }
 
         public bool? Gender { get; set; }

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Simbirsoft_Weather.Models
 {
-    public class Wheather_api
+    public class Weather_api
     {
         private root Root { get; set; }
 
-        public Wheather_api(string city)
+        public Weather_api(string city)
         {
             Root = json_to_list(Get_wheather_5d_json(city));
         }
@@ -36,6 +36,7 @@ namespace Simbirsoft_Weather.Models
         public class weather
         {
             public string description { get; set; }
+            public string icon { get; set; }
         }
         public class wind
         {
@@ -95,15 +96,16 @@ namespace Simbirsoft_Weather.Models
             return test;
         }
 
-        public class Wheather
+        public class Weather
         {
-            public double SpeedWind { get; set; }      
+            public double SpeedWind { get; set; }
             public double Mintemp { get; set; }
             public double Maxtemp { get; set; }
             public string main { get; set; }
+            public string icon { get; set; }
             public DateTime Date { get; set; }
         }
-        public List<Wheather> WheatherFor5Day()
+        public List<Weather> WheatherFor5Day()
         {
             DateTime day = DateTime.Today;
             Dictionary<int, Dictionary<string, root2>> test_dict = new Dictionary<int, Dictionary<string, root2>>();
@@ -113,18 +115,20 @@ namespace Simbirsoft_Weather.Models
                 day = day.AddDays(1);
             }
 
-            List<Wheather> result = new List<Wheather>();
+            List<Weather> result = new List<Weather>();
             foreach (var k in test_dict)
             {
                 var inner_dict_key_dates = k.Value.Keys.ToList();
                 var inner_dict_key_data = k.Value.Values.ToList();
 
-                Wheather day_wheather = new Wheather();
+                Weather day_wheather = new Weather();
                 day_wheather.Date = Convert.ToDateTime(inner_dict_key_dates[0]).Date;
                 day_wheather.Mintemp = inner_dict_key_data.Select(root2 => root2.main.temp_min).Min();
-                day_wheather.Maxtemp = inner_dict_key_data.Select(root2 => root2.main.temp_min).Max();
-                day_wheather.SpeedWind = inner_dict_key_data.Select(root2 => root2.wind.speed).Average();
+                day_wheather.Maxtemp = inner_dict_key_data.Select(root2 => root2.main.temp_min).Max();    
                 day_wheather.main = inner_dict_key_data[0].weather[0].description;
+                day_wheather.icon = inner_dict_key_data[0].weather[0].icon;
+                day_wheather.SpeedWind = inner_dict_key_data.Select(root2 => root2.wind.speed).Average();
+
                 result.Add(day_wheather);
 
             }

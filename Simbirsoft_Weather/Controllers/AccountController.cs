@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Simbirsoft_Weather.Models;
@@ -42,9 +43,16 @@ namespace Simbirsoft_Weather.Controllers
             {
                 ModelState.AddModelError("Город", "Город не найдет");
             }
+            if (model.Email != null)
+            {
+                var result = await _userManager.FindByEmailAsync(model.Email);
+                if (result != null)
+                {
+                    ModelState.AddModelError("Email", "Почта уже занята");
+                }
+            }
             if (ModelState.IsValid)
             {
-
                 User user = new User { Date = DateTime.UtcNow.AddHours(+3), Email = model.Email.Trim(), UserName = model.Email.Trim(), Name = model.Name.Trim(), Gender = model.Gender, Location = model.Region.Trim() };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -65,19 +73,20 @@ namespace Simbirsoft_Weather.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login(EditModel edit)
         {
             if (User.Identity.IsAuthenticated)
             {
                 ViewBag.Cities = Citydb.Cities.ToList();
                 var user = await _userManager.FindByNameAsync(User.Identity.Name);
-                return View(new LoginViewModel { EditModel = new EditModel { Email = user.Email, Gender = user.Gender, Name = user.Name, Region = user.Location } });
+                return View(new LoginViewModel { EditModel = new EditModel { Result = edit?.Result ?? null, Email = user.Email, Gender = user.Gender, Name = user.Name, Region = user.Location } });
             }
             return View();
         }
 
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> EditGender(LoginViewModel loginViewModel)
         {
             if (!User.Identity.IsAuthenticated)
@@ -91,17 +100,19 @@ namespace Simbirsoft_Weather.Controllers
             if (model.Gender == null)
             {
                 ModelState.AddModelError("Пол", "Выберите Пол");
-                ViewBag.Cities = Citydb.Cities.ToList();  
+                ViewBag.Cities = Citydb.Cities.ToList();
                 loginViewModel.EditModel.AddUser(user);
                 return View("login", loginViewModel);
             }
 
             user.Gender = model.Gender;
             await _userManager.UpdateAsync(user);
-            return RedirectToAction("Login");
+            model.Result = "Пол изменен";
+            return RedirectToAction("Login", model);
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> EditRegion(LoginViewModel loginViewModel)
         {
             if (!User.Identity.IsAuthenticated)
@@ -130,10 +141,12 @@ namespace Simbirsoft_Weather.Controllers
 
             user.Location = model.Region;
             await _userManager.UpdateAsync(user);
-            return RedirectToAction("Login");
+            model.Result = "Город изменен";
+            return RedirectToAction("Login", model);
         }
 
-            [HttpPost]
+        [HttpPost]
+        [Authorize]
         public async Task<IActionResult> EditName(LoginViewModel loginViewModel)
         {
             if (!User.Identity.IsAuthenticated)
@@ -149,15 +162,81 @@ namespace Simbirsoft_Weather.Controllers
                 loginViewModel.EditModel.AddUser(user);
                 return View("login", loginViewModel);
             }
-            
-          
+
+
             user.Name = model.Name;
             await _userManager.UpdateAsync(user);
-            return RedirectToAction("Login");
+            model.Result = "Имя изменено";
+            return RedirectToAction("Login", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> EditPassword(LoginViewModel loginViewModel)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var model = loginViewModel.EditPassword;
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (model.Password != null)
+            {
+                if (!_userManager.CheckPasswordAsync(user, model.Password).Result)
+                {
+                    ModelState.AddModelError("EditPassword.Password", "Не правильный пароль");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("EditPassword.Password", "Введите Пароль");
+            }
+
+            if (model.NewPassword == null)
+            {
+                ModelState.AddModelError("EditPassword.NewPassword", "Введите Пароль");
+            }
+
+
+            if (ModelState.IsValid)
+            {
+                var _passwordValidator =
+               HttpContext.RequestServices.GetService(typeof(IPasswordValidator<User>)) as IPasswordValidator<User>;
+                var _passwordHasher =
+                    HttpContext.RequestServices.GetService(typeof(IPasswordHasher<User>)) as IPasswordHasher<User>;
+
+                IdentityResult result =
+                    await _passwordValidator.ValidateAsync(_userManager, user, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    user.PasswordHash = _passwordHasher.HashPassword(user, model.NewPassword);
+                    await _userManager.UpdateAsync(user);
+                    loginViewModel.EditModel = new EditModel();
+                    loginViewModel.EditModel.Result = "Пароль изменен";
+                    return RedirectToAction("Login", loginViewModel.EditModel);
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("EditPassword.NewPassword", error.Description);
+                    }
+                }
+            }
+            ViewBag.Cities = Citydb.Cities.ToList();
+            loginViewModel.EditModel = new EditModel();
+            loginViewModel.EditModel.AddUser(user);
+            return View("login", loginViewModel);
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> EditEmail(LoginViewModel model)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -182,17 +261,33 @@ namespace Simbirsoft_Weather.Controllers
                 {
                     ModelState.AddModelError("EditModel.Email", "Введите новую почту");
                 }
+
+                var result = await _userManager.FindByEmailAsync(model.EditModel.Email);
+                if (result != null)
+                {
+                    ModelState.AddModelError("EditModel.Email", "Почта уже занята");
+                }
             }
             if (ModelState.IsValid)
             {
-                await _userManager.SetEmailAsync(user, model.EditModel.Email);
-                return RedirectToAction("Login");
+                var result = await _userManager.SetEmailAsync(user, model.EditModel.Email);
+                if (result.Succeeded)
+                {
+                    model.EditModel.Result = "e-mail изменен";
+                    return RedirectToAction("Login", model.EditModel);
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("EditModel.Email", error.Description);
+                    }
+                }
+
             }
             ViewBag.Cities = Citydb.Cities.ToList();
-           
-            model.EditModel.Name = user.Name;
-            model.EditModel.Region = user.Location;
-            model.EditModel.Gender = user.Gender;
+
+            model.EditModel.AddUser(user);
             return View("login", model);
         }
 

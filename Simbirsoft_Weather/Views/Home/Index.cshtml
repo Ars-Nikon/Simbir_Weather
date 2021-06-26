@@ -17,35 +17,42 @@
         <div class="forecast-container">
             <div class="today forecast">
                 <div class="forecast-header">
-                    <div class="day">@Model.DayOfWeek.GetValueOrDefault((int)Model.Wheathers[0].Date.DayOfWeek)</div>
-                    <div class="date">@Model.Wheathers[0].Date.ToString("M")</div>
+                    <div class="day">@Model.DayOfWeek.GetValueOrDefault((int)Model.Weathers[0].Date.DayOfWeek)</div>
+                    <div class="date">@Model.Weathers[0].Date.ToString("M")</div>
                 </div> <!-- .forecast-header -->
                 <div class="forecast-content">
                     <div class="location">@Model.Region</div>
                     <div class="degree">
-                        <div class="num">@(Math.Round(Model.Wheathers[0].Maxtemp))<sup>o</sup>C</div>
+                        <div class="num">@(Math.Round(Model.Weathers[0].Maxtemp))<sup>o</sup>C</div>
                         <div class="forecast-icon">
-                            <img src="~/WeatherFront/images/icons/icon-1.svg" width=90>
+                            <icon icon="@Model.Weathers[0].icon"></icon>
                         </div>
                     </div>
-                    <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)Model.Wheathers[0].SpeedWind) м/с</span>
-                    <span>@Model.Wheathers[0].main</span>
+                    <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)Model.Weathers[0].SpeedWind) м/с</span>
+                    <br />
+                    <h2>@Model.Weathers[0].main</h2>
                 </div>
             </div>
 
-            <div class="forecast">
-                <div class="forecast-header">
-                    <div class="day">Tuesday</div>
-                </div> <!-- .forecast-header -->
-                <div class="forecast-content">
-                    <div class="forecast-icon">
-                        <img src="~/WeatherFront/images/icons/icon-3.svg" alt="" width=48>
+            @{Model.Weathers.RemoveAt(0);}
+
+            @foreach (var day in Model.Weathers)
+            {
+                <div class="forecast">
+                    <div class="forecast-header">
+                        <div class="day">@Model.DayOfWeek.GetValueOrDefault((int)day.Date.DayOfWeek)</div>
+                    </div> <!-- .forecast-header -->
+                    <div class="forecast-content">
+                        <div class="forecast-icon">
+                            <icon icon="@day.icon"></icon>
+                        </div>
+                        <div class="degree">@(Math.Round(day.Maxtemp))<sup>o</sup>C</div>
+                        <small>18<sup>o</sup></small>
                     </div>
-                    <div class="degree">23<sup>o</sup>C</div>
-                    <small>18<sup>o</sup></small>
+                    <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
+                    
                 </div>
-            </div>
-
+            }
         </div>
     </div>
 </div>
@@ -54,29 +61,28 @@
     <table class="table table-dark">
         <thead>
             <tr>
-                <th scope="col">Time</th>
-                <th scope="col">Weather</th>
-
+                <th scope="col">Время</th>
+                <th scope="col">Температура</th>
+                <th scope="col">Описание</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">12:00</th>
-                <td>-----</td>
 
-            </tr>
-            <tr>
-                <th scope="row">12:00</th>
-                <td>-----</td>
-
-            </tr>
-            <tr>
-                <th scope="row">12:00</th>
-                <td>-----</td>
-
-            </tr>
+            @foreach (var weather in Model.WeatherForTime)
+            {
+                <tr>
+                    <th scope="row">@Convert.ToDateTime(weather.Key).ToString("t")</th>
+                    <td> <div class="degree">@Math.Round(weather.Value.main.temp)<sup>o</sup>C</div></td>
+                    <td>
+                        @weather.Value.weather[0].description
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
+    <div>
+        <h1 class="text-left">Что бы сегодня надеть?</h1>
+        </div>
     <table class="table table-dark">
         <thead>
             <tr>
@@ -104,5 +110,6 @@
             </tr>
         </tbody>
     </table>
+
 
 </div>

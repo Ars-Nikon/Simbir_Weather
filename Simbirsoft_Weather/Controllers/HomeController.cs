@@ -23,12 +23,21 @@ namespace Simbirsoft_Weather.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (_userManager.FindByNameAsync(User.Identity.Name).Result == null)
+                {
+                    await _signInManager.SignOutAsync();
+                }
+            }
 
-            var wheather = new Wheather_api("Краснодар");
-            var wheather5days = wheather.WheatherFor5Day();
-            return View(new IndexModel {Wheathers= wheather5days,Region = "Краснодар" });
+
+            var weather = new Weather_api("Краснодар");
+            var weather5days = weather.WheatherFor5Day();
+            var WeatherForTime = weather.WheatherForTime(weather5days[0].Date.ToString());
+            return View(new IndexModel { Weathers = weather5days, Region = "Краснодар", WeatherForTime = WeatherForTime });
         }
 
 

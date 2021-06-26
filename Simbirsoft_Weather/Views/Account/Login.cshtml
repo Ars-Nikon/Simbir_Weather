@@ -3,31 +3,23 @@
 @model Simbirsoft_Weather.Models.LoginViewModel
 
 @if (User.Identity.IsAuthenticated)
-{
+{<div class="container">
     <h1 class="text-center">Добрый день @Model.EditModel?.Name</h1>
-
-
-
+    @if (Model.EditModel.Result != null)
+    {
+        <h1 class="text-left  text-success">@Model.EditModel.Result</h1>
+    }
     <fieldset class="form-group">
-        <h2 class="text-left">Изменить Почту</h2>
-        <form method="post" asp-controller="Account" asp-action="EditEmail">
+        <h2 class="text-left">Изменить Имя</h2>
+        <form method="post" asp-controller="Account" asp-action="EditName">
             <fieldset class="form-group">
-                <label asp-for="@Model.EditModel.Email">е-mail</label><br />
-                <input type="email" asp-for="@Model.EditModel.Email" autocomplete="off" />
-                <span class="text-danger" asp-validation-for="@Model.EditModel.Email"></span>
+                <label asp-for="@Model.EditModel.Name">Имя</label><br />
+                <input asp-for="@Model.EditModel.Name" autocomplete="off" />
+                <span class="text-danger" asp-validation-for="EditModel.Name"></span>
             </fieldset>
-            <fieldset class="form-group">
-                <div>
-                    <label asp-for="@Model.EditModel.Password">Подтвердите пароль для смены e-mail</label><br />
-                    <input id="password-input" autocomplete="off" type="password" asp-for="@Model.EditModel.Password" />
-                    <span class="text-danger" asp-validation-for="@Model.EditModel.Password"></span>
-                    <br />
-                </div>
-                <div>
-                    <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
-                </div>
-            </fieldset>
-            <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+            <div>
+                <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+            </div>
         </form>
     </fieldset>
     <fieldset class="form-group">
@@ -39,19 +31,6 @@
                 <label asp-for="@Model.EditModel.Gender">Мужской</label>
                 <input type="radio" asp-for="@Model.EditModel.Gender" value="false" />
             </div>
-            <div>
-                <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
-            </div>
-        </form>
-    </fieldset>
-    <fieldset class="form-group">
-        <h2 class="text-left">Изменить Имя</h2>
-        <form method="post" asp-controller="Account" asp-action="EditName">
-            <fieldset class="form-group">
-                <label asp-for="@Model.EditModel.Name">Имя</label><br />
-                <input asp-for="@Model.EditModel.Name" autocomplete="off" />
-                <span class="text-danger" asp-validation-for="EditModel.Name"></span>
-            </fieldset>
             <div>
                 <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
             </div>
@@ -76,6 +55,57 @@
             </div>
         </form>
     </fieldset>
+    <fieldset class="form-group">
+        <h2 class="text-left">Изменить Почту</h2>
+        <form method="post" asp-controller="Account" asp-action="EditEmail">
+            <fieldset class="form-group">
+                <label asp-for="@Model.EditModel.Email">е-mail</label><br />
+                <input type="email" asp-for="@Model.EditModel.Email" autocomplete="off" />
+                <span class="text-danger" asp-validation-for="@Model.EditModel.Email"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <div>
+                    <label asp-for="@Model.EditModel.Password">Подтвердите пароль для смены e-mail</label><br />
+                    <input id="password-input" autocomplete="off" type="password" asp-for="@Model.EditModel.Password" />
+                    <span class="text-danger" asp-validation-for="@Model.EditModel.Password"></span>
+                    <br />
+                </div>
+                <div>
+                    <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
+                </div>
+            </fieldset>
+            <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+        </form>
+    </fieldset>
+    <fieldset class="form-group">
+        <h2 class="text-left">Изменить пароль</h2>
+        <form method="post" asp-controller="Account" asp-action="EditPassword">
+            <fieldset class="form-group">
+                <label asp-for="@Model.EditPassword.NewPassword">Новый Пароль</label><br />
+                <input type="password" asp-for="@Model.EditPassword.NewPassword" autocomplete="off" />
+                <span class="text-danger" asp-validation-for="@Model.EditPassword.NewPassword"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <div>
+                    <label asp-for="@Model.EditPassword.Password">Старый Пароль</label><br />
+                    <input id="password-input2" autocomplete="off" type="password" asp-for="@Model.EditPassword.Password" />
+                    <span class="text-danger" asp-validation-for="@Model.EditPassword.Password"></span>
+                    <br />
+                </div>
+                <div>
+                    <label><input type="checkbox" class="password-checkbox2">Показать пароль</label>
+                </div>
+            </fieldset>
+            <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+        </form>
+    </fieldset>
+    <div>
+        <form asp-action="Logout" asp-controller="Account" method="post">
+            <input class="btn btn-info btn-lg pull-right" type="submit" autocomplete="off" value="Выход" />
+        </form>
+    </div>
+</div>
+
 }
 else
 {
@@ -102,9 +132,8 @@ else
             </fieldset>
             <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Вход" />
             <a asp-action="Registration" class="btn btn-dark btn-lg pull-right">Регистрация</a>
-
-
         </form>
+
     </div>
 }
 
@@ -115,6 +144,15 @@ else
             $('#password-input').attr('type', 'text');
         } else {
             $('#password-input').attr('type', 'password');
+        }
+    });
+</script>
+<script>
+    $('body').on('click', '.password-checkbox2', function () {
+        if ($(this).is(':checked')) {
+            $('#password-input2').attr('type', 'text');
+        } else {
+            $('#password-input2').attr('type', 'password');
         }
     });
 </script>

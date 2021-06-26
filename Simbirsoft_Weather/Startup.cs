@@ -35,6 +35,7 @@ namespace Simbirsoft_Weather
 
             services.AddIdentity<User, IdentityRole>(opts =>
             {
+                opts.User.RequireUniqueEmail = true;
                 opts.Password.RequiredLength = 8;   // минимальная длина
                 opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
                 opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре

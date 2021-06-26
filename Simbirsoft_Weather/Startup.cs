@@ -34,6 +34,10 @@ namespace Simbirsoft_Weather
                options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
             services.AddScoped<IClothingConsultant, ClothingConsultant>();
+            services.Configure<SmtpClientConfiguration>(Configuration.GetSection("SmtpClientConfiguration"));
+
+            services.AddScoped<INotificationSender, MailNotificationSender>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             services.AddIdentity<User, IdentityRole>(opts =>
             {
@@ -69,6 +73,7 @@ namespace Simbirsoft_Weather
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

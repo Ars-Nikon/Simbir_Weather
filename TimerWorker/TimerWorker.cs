@@ -29,6 +29,7 @@ namespace TimerWorker
 
         public async Task StartTimerAsync()
         {
+            var result = SendReadyNotificationIdToServer(111);
             while (true)
             {
                 try

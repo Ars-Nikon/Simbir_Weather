@@ -3,10 +3,16 @@
 }
 @model Simbirsoft_Weather.Models.IndexModel
 
-<div class="hero" data-bg-image="back.jpg">
+<div class="hero" data-bg-image="">
     <div class="container">
-        <form action="#" class="find-location">
-            <input type="text" placeholder="Find your location...">
+        <form asp-action="Index" class="find-location">
+            <input type="text" list="Region1" asp-for="Region" class="form-control" />
+            <datalist id="Region1">
+                @foreach (var item in ViewBag.Cities)
+                    {
+                <option>@item.City_Ru</option>
+                    }
+            </datalist>
             <input type="submit" value="Find">
         </form>
 
@@ -25,12 +31,12 @@
                     <div class="degree">
                         <div class="num">@(Math.Round(Model.Weathers[0].Maxtemp))<sup>o</sup>C</div>
                         <div class="forecast-icon">
-                            <icon icon="@Model.Weathers[0].icon"></icon>
+                            <icon icon="@Model.Weathers[0].Icon"></icon>
                         </div>
                     </div>
                     <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)Model.Weathers[0].SpeedWind) м/с</span>
                     <br />
-                    <h2>@Model.Weathers[0].main</h2>
+                    <h2>@Model.Weathers[0].Main</h2>
                 </div>
             </div>
 
@@ -44,13 +50,13 @@
                     </div> <!-- .forecast-header -->
                     <div class="forecast-content">
                         <div class="forecast-icon">
-                            <icon icon="@day.icon"></icon>
+                            <icon icon="@day.Icon"></icon>
                         </div>
                         <div class="degree">@(Math.Round(day.Maxtemp))<sup>o</sup>C</div>
                         <small>18<sup>o</sup></small>
                     </div>
                     <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
-                    
+
                 </div>
             }
         </div>
@@ -72,9 +78,9 @@
             {
                 <tr>
                     <th scope="row">@Convert.ToDateTime(weather.Key).ToString("t")</th>
-                    <td> <div class="degree">@Math.Round(weather.Value.main.temp)<sup>o</sup>C</div></td>
+                    <td> <div class="degree">@Math.Round(weather.Value.GeneralProperities.Temp)<sup>o</sup>C</div></td>
                     <td>
-                        @weather.Value.weather[0].description
+                        @weather.Value.WeatherDescriptions[0].Description
                     </td>
                 </tr>
             }
@@ -82,7 +88,7 @@
     </table>
     <div>
         <h1 class="text-left">Что бы сегодня надеть?</h1>
-        </div>
+    </div>
     <table class="table table-dark">
         <thead>
             <tr>
@@ -110,6 +116,16 @@
             </tr>
         </tbody>
     </table>
+    @if (Model.NeedGeolocation)
+    {
 
+        <script>
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    document.location.href = document.location.href + 'home/index?' + "lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
+                }
+            );</script>
+
+    }
 
 </div>

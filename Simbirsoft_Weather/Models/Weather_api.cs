@@ -3,67 +3,81 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Simbirsoft_Weather.Models
 {
-    public class Weather_api
+    public class WeatherApi
     {
-        private root Root { get; set; }
+        private OpenWeatherForecast Root { get; set; }
 
-        public Weather_api(string city)
-        {
-            Root = json_to_list(Get_wheather_5d_json(city));
-        }
-
-
-        private int _count = 3;
-
-        public int retrycount
-        {
-            get { return _count; }
-            set { _count = value; }
-        }
-        public class main
-        {
-            public double temp { get; set; }
-            public double feels_like { get; set; }
-            public double temp_min { get; set; }
-            public double temp_max { get; set; }
-            public int pressure { get; set; }
-            public int humidity { get; set; }
-        }
-        public class weather
-        {
-            public string description { get; set; }
-            public string icon { get; set; }
-        }
-        public class wind
-        {
-            public double speed { get; set; }
-            public int deg { get; set; }
-        }
-
-        public class root2
-        {
-            public main main { get; set; }
-            public wind wind { get; set; }
-            public List<weather> weather { get; set; }
-            public string dt_txt { get; set; }
-
-        }
-
-        public class root
-        {
-            public IList<root2> list { get; set; }
-        }
-
-        private string Get_wheather_5d_json(string city)
+        public WeatherApi(string city)
         {
             string url = $"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid=922b05ce49a15397ded5a54a17cad16d&cnt=50&lang=ru&units=metric";
+
+            Root = json_to_list(Get_wheather_5d_json(url));
+        }
+
+        public WeatherApi(string lat, string lon)
+        {
+            string url = $"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=922b05ce49a15397ded5a54a17cad16d&cnt=50&lang=ru&units=metric";
+            Root = json_to_list(Get_wheather_5d_json(url));
+
+        }
+
+
+        public int Retrycount { get; set; } = 3;
+
+        public class Main
+        {
+            [JsonPropertyName("temp")] public double Temp { get; set; }
+            [JsonPropertyName("feels_like")] public double FeelsLike { get; set; }
+            [JsonPropertyName("temp_min")] public double TempMin { get; set; }
+            [JsonPropertyName("temp_max")] public double TempMax { get; set; }
+            [JsonPropertyName("pressure")] public int Pressure { get; set; }
+            [JsonPropertyName("humidity")] public int Humidity { get; set; }
+        }
+
+        public class WeatherDescription
+        {
+            [JsonPropertyName("description")]
+            public string Description { get; set; }
+            [JsonPropertyName("icon")]
+            public string Icon { get; set; }
+
+        }
+
+        public class Wind
+        {
+            [JsonPropertyName("speed")] public double Speed { get; set; }
+            [JsonPropertyName("deg")] public int Deg { get; set; }
+        }
+
+        public class City
+        {
+            [JsonPropertyName("name")] public string Name { get; set; }
+        }
+
+        public class ForecastData
+        {
+            [JsonPropertyName("main")] public Main GeneralProperities { get; set; }
+            [JsonPropertyName("wind")] public Wind Wind { get; set; }
+            [JsonPropertyName("weather")] public List<WeatherDescription> WeatherDescriptions { get; set; }
+            [JsonPropertyName("dt_txt")] public string DtTxt { get; set; }
+        }
+
+        public class OpenWeatherForecast
+        {
+            [JsonPropertyName("list")] public IList<ForecastData> ForecastList { get; set; }
+            [JsonPropertyName("city")] public City City { get; set; }
+        }
+
+        private string Get_wheather_5d_json(string url)
+        {
             HttpClient client = new HttpClient();
             string json = "";
-            for (int tries = 0; tries < retrycount; tries++)
+            for (int tries = 0; tries < Retrycount; tries++)
             {
                 try
                 {
@@ -73,7 +87,6 @@ namespace Simbirsoft_Weather.Models
                     var success = response.IsSuccessStatusCode;
                     if (success)
                         break;
-
                 }
                 catch (HttpRequestException e)
                 {
@@ -84,55 +97,62 @@ namespace Simbirsoft_Weather.Models
             return json;
         }
 
-        private root json_to_list(string json)
+        private OpenWeatherForecast json_to_list(string json)
         {
-            var forecast_list = JsonSerializer.Deserialize<root>(json);
-            return forecast_list;
+            var forecastList = JsonSerializer.Deserialize<OpenWeatherForecast>(json);
+            return forecastList;
         }
 
-        public Dictionary<string, root2> WheatherForTime(string date)
+        public Dictionary<string, ForecastData> WheatherForTime(string date)
         {
-            var test = Root.list.Where(root2 => Convert.ToDateTime(root2.dt_txt).Day == Convert.ToDateTime(date).Day).ToDictionary(x => x.dt_txt, x => x);
-            return test;
+            var wheather = Root.ForecastList
+                .Where(forecastData => Convert.ToDateTime(forecastData.DtTxt).Day == Convert.ToDateTime(date).Day)
+                .ToDictionary(x => x.DtTxt, x => x);
+            return wheather;
         }
 
-        public class Weather
+
+        public class ForecastView
         {
-            public double SpeedWind { get; set; }
             public double Mintemp { get; set; }
             public double Maxtemp { get; set; }
-            public string main { get; set; }
-            public string icon { get; set; }
+            public string Main { get; set; }
             public DateTime Date { get; set; }
+            public string Icon { get; set; }
+            public City City { get; set; }
+            public double SpeedWind { get; set; }
         }
-        public List<Weather> WheatherFor5Day()
+
+        public List<ForecastView> WheatherFor5Day()
         {
             DateTime day = DateTime.Today;
-            Dictionary<int, Dictionary<string, root2>> test_dict = new Dictionary<int, Dictionary<string, root2>>();
+            Dictionary<int, Dictionary<string, ForecastData>> wheatherDict =
+                new Dictionary<int, Dictionary<string, ForecastData>>();
             for (int i = 0; i <= 4; i++)
             {
-                test_dict.Add(i, WheatherForTime(day.ToString()));
+                wheatherDict.Add(i, WheatherForTime(day.ToString()));
                 day = day.AddDays(1);
             }
 
-            List<Weather> result = new List<Weather>();
-            foreach (var k in test_dict)
+            List<ForecastView> result = new List<ForecastView>();
+            foreach (var k in wheatherDict)
             {
-                var inner_dict_key_dates = k.Value.Keys.ToList();
-                var inner_dict_key_data = k.Value.Values.ToList();
+                var dates = k.Value.Keys.ToList();
+                var forecastData = k.Value.Values.ToList();
 
-                Weather day_wheather = new Weather();
-                day_wheather.Date = Convert.ToDateTime(inner_dict_key_dates[0]).Date;
-                day_wheather.Mintemp = inner_dict_key_data.Select(root2 => root2.main.temp_min).Min();
-                day_wheather.Maxtemp = inner_dict_key_data.Select(root2 => root2.main.temp_min).Max();    
-                day_wheather.main = inner_dict_key_data[0].weather[0].description;
-                day_wheather.icon = inner_dict_key_data[0].weather[0].icon;
-                day_wheather.SpeedWind = inner_dict_key_data.Select(root2 => root2.wind.speed).Average();
-
-                result.Add(day_wheather);
-
+                ForecastView dayWheather = new ForecastView();
+                dayWheather.Date = Convert.ToDateTime(dates[0]).Date;
+                dayWheather.Mintemp = forecastData.Select(data => data.GeneralProperities.TempMin).Min();
+                dayWheather.Maxtemp = forecastData.Select(data => data.GeneralProperities.TempMin).Max();
+                dayWheather.Main = forecastData[0].WeatherDescriptions[0].Description;
+                dayWheather.Icon = forecastData[0].WeatherDescriptions[0].Icon;
+                dayWheather.City = Root.City;
+                dayWheather.SpeedWind = forecastData.Select(data => data.Wind.Speed).Average();
+                result.Add(dayWheather);
             }
+
             return result;
         }
     }
+
 }

@@ -310,10 +310,10 @@ namespace Simbirsoft_Weather.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Incorrect username and (or) password");
+                    ModelState.AddModelError("Password", "Не правильный логин или пароль");
                 }
             }
-            return View(model);
+            return View(loginViewModel);
         }
 
         [HttpPost]

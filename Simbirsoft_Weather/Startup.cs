@@ -27,10 +27,10 @@ namespace Simbirsoft_Weather
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<IdentityContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+               options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
             services.AddDbContext<CityContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("CityConnection")));
+               options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
 
             services.AddIdentity<User, IdentityRole>(opts =>

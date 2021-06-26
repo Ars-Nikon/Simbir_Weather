@@ -15,7 +15,7 @@ namespace Simbirsoft_Weather.Models
         public Dictionary<string, ForecastData> WeatherForTime { get; set; }
 
 
-        public bool NeedGeolocation { get; set; }
+     
 
         public readonly Dictionary<int, string> DayOfWeek = new Dictionary<int, string>()
         {{1, "Понедельник"},

@@ -65,6 +65,7 @@ namespace Simbirsoft_Weather.Models
             [JsonPropertyName("wind")] public Wind Wind { get; set; }
             [JsonPropertyName("weather")] public List<WeatherDescription> WeatherDescriptions { get; set; }
             [JsonPropertyName("dt_txt")] public string DtTxt { get; set; }
+            [JsonPropertyName("pop")] public double ProbabilityRain { get; set; }
         }
 
         public class OpenWeatherForecast
@@ -119,6 +120,7 @@ namespace Simbirsoft_Weather.Models
             public string Main { get; set; }
             public DateTime Date { get; set; }
             public string Icon { get; set; }
+            public double ProbabilityRain { get; set; }
             public City City { get; set; }
             public double SpeedWind { get; set; }
         }
@@ -146,6 +148,7 @@ namespace Simbirsoft_Weather.Models
                 dayWheather.Maxtemp = forecastData.Select(data => data.GeneralProperities.TempMin).Max();
                 dayWheather.Main = forecastData[0].WeatherDescriptions[0].Description;
                 dayWheather.Icon = forecastData[0].WeatherDescriptions[0].Icon;
+                dayWheather.ProbabilityRain = forecastData[0].ProbabilityRain;
                 dayWheather.City = Root.City;
                 dayWheather.SpeedWind = forecastData.Select(data => data.Wind.Speed).Average();
                 result.Add(dayWheather);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,9 @@ namespace Simbirsoft_Weather
             services.AddDbContext<CityContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
+            services.AddDbContext<EventContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+          
             services.AddScoped<IClothingConsultant, ClothingConsultant>();
             services.Configure<SmtpClientConfiguration>(Configuration.GetSection("SmtpClientConfiguration"));
 
@@ -42,11 +46,11 @@ namespace Simbirsoft_Weather
             services.AddIdentity<User, IdentityRole>(opts =>
             {
                 opts.User.RequireUniqueEmail = true;
-                opts.Password.RequiredLength = 8;   // минимальная длина
-                opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
-                opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
-                opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
-                opts.Password.RequireDigit = false; // требуются ли цифры
+                opts.Password.RequiredLength = 8;   // Г¬ГЁГ­ГЁГ¬Г Г«ГјГ­Г Гї Г¤Г«ГЁГ­Г 
+                opts.Password.RequireNonAlphanumeric = false;   // ГІГ°ГҐГЎГіГѕГІГ±Гї Г«ГЁ Г­ГҐ Г Г«ГґГ ГўГЁГІГ­Г®-Г¶ГЁГґГ°Г®ГўГ»ГҐ Г±ГЁГ¬ГўГ®Г«Г»
+                opts.Password.RequireLowercase = false; // ГІГ°ГҐГЎГіГѕГІГ±Гї Г«ГЁ Г±ГЁГ¬ГўГ®Г«Г» Гў Г­ГЁГ¦Г­ГҐГ¬ Г°ГҐГЈГЁГ±ГІГ°ГҐ
+                opts.Password.RequireUppercase = false; // ГІГ°ГҐГЎГіГѕГІГ±Гї Г«ГЁ Г±ГЁГ¬ГўГ®Г«Г» Гў ГўГҐГ°ГµГ­ГҐГ¬ Г°ГҐГЈГЁГ±ГІГ°ГҐ
+                opts.Password.RequireDigit = false; // ГІГ°ГҐГЎГіГѕГІГ±Гї Г«ГЁ Г¶ГЁГґГ°Г»
             }).AddEntityFrameworkStores<IdentityContext>();
 
             services.AddControllersWithViews();
@@ -59,6 +63,11 @@ namespace Simbirsoft_Weather
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

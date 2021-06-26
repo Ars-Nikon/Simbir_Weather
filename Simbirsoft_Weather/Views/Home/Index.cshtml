@@ -116,16 +116,5 @@
             </tr>
         </tbody>
     </table>
-    @if (Model.NeedGeolocation)
-    {
-
-        <script>
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    document.location.href = document.location.href + 'home/index?' + "lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
-                }
-            );</script>
-
-    }
-
+ 
 </div>

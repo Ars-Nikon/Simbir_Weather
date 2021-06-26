@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,23 +28,39 @@ namespace Simbirsoft_Weather.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index(string lat, string lon, IndexModel indexModel)
+        /*
+        [Authorize]
+        public async Task<IActionResult> Event()
+        {
+
+            return View();
+        }
+        */
+
+        public async Task<IActionResult> Index(IndexModel indexModel)
         {
             string location = "Москва";
-            bool NeedGeolocation = true;
+
             WeatherApi weather;
 
             if (User.Identity.IsAuthenticated && _userManager.FindByNameAsync(User.Identity.Name).Result == null)
             {
-                    await _signInManager.SignOutAsync();
-                    return RedirectToAction("Index");
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index");
             }
+
+
+
+
+            IPAddress remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
+
+            Console.WriteLine(remoteIpAddress.ToString());
+
+
 
             if (indexModel.Region != null && Citydb.Cities.FirstOrDefault(x => x.City_Ru.ToLower() == indexModel.Region.Trim().ToLower()) != null)
             {
                 weather = new WeatherApi(indexModel.Region);
-                NeedGeolocation = false;
-
                 ViewBag.Cities = Citydb.Cities.ToList();
             }
             else
@@ -61,28 +80,21 @@ namespace Simbirsoft_Weather.Controllers
                         weather = new WeatherApi(location);
                     }
 
-                    NeedGeolocation = false;
+
                 }
                 else
                 {
-                    if (lat != null && lon != null)
-                    {
-                        weather = new WeatherApi(lat, lon);
-                        NeedGeolocation = false;
 
-                    }
-                    else
-                    {
-                        weather = new WeatherApi(location);
-                    }
+
+                    weather = new WeatherApi(location);
+
                 }
             }
-        
             ViewBag.Cities = Citydb.Cities.ToList();
             var weather5days = weather.WheatherFor5Day();
             var WeatherForTime = weather.WheatherForTime(weather5days[0].Date.ToString());
             location = weather5days[0].City.Name;
-            return View(new IndexModel { Weathers = weather5days, Region = location, WeatherForTime = WeatherForTime, NeedGeolocation = NeedGeolocation });
+            return View(new IndexModel { Weathers = weather5days, Region = location, WeatherForTime = WeatherForTime });
         }
 
 

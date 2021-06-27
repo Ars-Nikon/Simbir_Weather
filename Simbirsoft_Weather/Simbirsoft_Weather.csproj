@@ -6,12 +6,23 @@
 
     <ItemGroup>
       <PackageReference Include="Dadata" Version="21.3.0" />
+      <PackageReference Include="EntityFramework" Version="6.4.4" />
       <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
       <PackageReference Include="MailKit" Version="2.13.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.16" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.16" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.16" />
       <PackageReference Include="Microsoft.jQuery.Unobtrusive.Validation" Version="3.2.12" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.11" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Resources\notificationForAll.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Resources\notificationForWhom.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

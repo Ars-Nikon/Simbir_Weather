@@ -110,7 +110,7 @@
 else
 {
     <div class="container">
-        <form method="post" asp-controller="Account" asp-action="Login">
+        <form method="post" asp-controller="Account" asp-action="Login"  asp-route-returnUrl="@Model.ReturnUrl">
 
             <div asp-validation-summary="All"></div>
 

@@ -39,7 +39,7 @@ namespace Simbirsoft_Weather.Controllers
         public async Task<IActionResult> Registration(RegistrationModel model)
         {
 
-            if (model.Email == null || Citydb.Cities.FirstOrDefault(x => x.City_Ru.ToLower() == model.Region.Trim().ToLower()) == null)
+            if (Citydb.Cities.FirstOrDefault(x => x.City_Ru.ToLower() == model.Region.Trim().ToLower()) == null)
             {
                 ModelState.AddModelError("Город", "Город не найдет");
             }
@@ -73,15 +73,15 @@ namespace Simbirsoft_Weather.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login(EditModel edit)
+        public async Task<IActionResult> Login(EditModel edit, string returnUrl = null)
         {
             if (User.Identity.IsAuthenticated)
             {
                 ViewBag.Cities = Citydb.Cities.ToList();
                 var user = await _userManager.FindByNameAsync(User.Identity.Name);
-                return View(new LoginViewModel { EditModel = new EditModel { Result = edit?.Result ?? null, Email = user.Email, Gender = user.Gender, Name = user.Name, Region = user.Location } });
+                return View(new LoginViewModel { EditModel = new EditModel { Result = edit?.Result ?? null, Email = user.Email, Gender = user.Gender, Name = user.Name, Region = user.Location }, ReturnUrl = returnUrl });
             }
-            return View();
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
 
@@ -304,8 +304,15 @@ namespace Simbirsoft_Weather.Controllers
                 if (result.Succeeded)
                 {
 
+                    if (!string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl))
+                    {
+                        return Redirect(loginViewModel.ReturnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
 
-                    return RedirectToAction("Index", "Home");
 
                 }
                 else

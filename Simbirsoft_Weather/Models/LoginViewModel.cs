@@ -11,6 +11,8 @@ namespace Simbirsoft_Weather.Models
 
         public EditModel EditModel { get; set; }
 
+        public string ReturnUrl { get; set; }
+
         public LoginModel LoginModel { get; set; }
 
         public EditPassword EditPassword { get; set; }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Simbirsoft_Weather.Models;
+using Simbirsoft_Weather.Services;
 
 namespace Simbirsoft_Weather
 {
@@ -37,14 +38,24 @@ namespace Simbirsoft_Weather
             services.AddDbContext<EventContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
+            services.AddDbContext<ClothesContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+            services.AddScoped<IClothesRepository, ClothesRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IClothingConsultant, ClothingConsultant>();
+            services.Configure<SmtpClientConfiguration>(Configuration.GetSection("SmtpClientConfiguration"));
+            services.AddScoped<INotificationSender, MailNotificationSender>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<INotificationWritter, NotificationWritter>();
+
             services.AddIdentity<User, IdentityRole>(opts =>
             {
                 opts.User.RequireUniqueEmail = true;
-                opts.Password.RequiredLength = 8;   // минимальная длина
-                opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
-                opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
-                opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
-                opts.Password.RequireDigit = false; // требуются ли цифры
+                opts.Password.RequiredLength = 8;   // Г¬ГЁГ­ГЁГ¬Г Г«ГјГ­Г Гї Г¤Г«ГЁГ­Г 
+                opts.Password.RequireNonAlphanumeric = false;   // ГІГ°ГҐГЎГіГѕГІГ±Гї Г«ГЁ Г­ГҐ Г Г«ГґГ ГўГЁГІГ­Г®-Г¶ГЁГґГ°Г®ГўГ»ГҐ Г±ГЁГ¬ГўГ®Г«Г»
+                opts.Password.RequireLowercase = false; // ГІГ°ГҐГЎГіГѕГІГ±Гї Г«ГЁ Г±ГЁГ¬ГўГ®Г«Г» Гў Г­ГЁГ¦Г­ГҐГ¬ Г°ГҐГЈГЁГ±ГІГ°ГҐ
+                opts.Password.RequireUppercase = false; // ГІГ°ГҐГЎГіГѕГІГ±Гї Г«ГЁ Г±ГЁГ¬ГўГ®Г«Г» Гў ГўГҐГ°ГµГ­ГҐГ¬ Г°ГҐГЈГЁГ±ГІГ°ГҐ
+                opts.Password.RequireDigit = false; // ГІГ°ГҐГЎГіГѕГІГ±Гї Г«ГЁ Г¶ГЁГґГ°Г»
             }).AddEntityFrameworkStores<IdentityContext>();
 
             services.AddControllersWithViews();
@@ -77,6 +88,7 @@ namespace Simbirsoft_Weather
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

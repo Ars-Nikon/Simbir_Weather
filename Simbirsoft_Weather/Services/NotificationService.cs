@@ -34,7 +34,7 @@ namespace Simbirsoft_Weather.Services
             if (user == null) return;
 
             WeatherApi api = new WeatherApi(eventInfo.Region);
-            int days = (eventInfo.DateEvent - DateTime.Now).Days;
+            int days = (eventInfo.DateEvent - DateTime.Now).Value.Days;
             var forecast = api.WheatherFor5Day()[days];
             var forecastForTime = api.WheatherForTime(forecast.Date.ToString());
             var recommendation = (bool)user.Gender ? _clothingConsultant.GetWomanRecommendation(forecast) : _clothingConsultant.GetManRecommendation(forecast);

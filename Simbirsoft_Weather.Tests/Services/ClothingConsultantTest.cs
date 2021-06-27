@@ -15,10 +15,10 @@ namespace Simbirsoft_Weather.Tests.Services
         }
 
         [Theory]
-        [InlineData(30, 50)]
-        public void Test1(double minTemp, double maxTemp)
+        [InlineData(30, 50, 0.3)]
+        public void Test1(double minTemp, double maxTemp, double chanceOfRain)
         {
-            Forecast forecast = new Forecast() { Mintemp = minTemp, Maxtemp = maxTemp };
+            Forecast forecast = new Forecast() { Mintemp = minTemp, Maxtemp = maxTemp, СhanceOfRain = chanceOfRain };
 
             var result = _clothingConsultant.GetRecommendation(forecast);
 
@@ -26,12 +26,10 @@ namespace Simbirsoft_Weather.Tests.Services
             Assert.NotNull(result.Man.BodyTop);
             Assert.NotNull(result.Man.BodyBottom);
             Assert.NotNull(result.Man.Legs);
-            Assert.NotNull(result.Man.Other);
             Assert.NotNull(result.Woman.Head);
             Assert.NotNull(result.Woman.BodyTop);
             Assert.NotNull(result.Woman.BodyBottom);
             Assert.NotNull(result.Woman.Legs);
-            Assert.NotNull(result.Woman.Other);
         }
     }
 }

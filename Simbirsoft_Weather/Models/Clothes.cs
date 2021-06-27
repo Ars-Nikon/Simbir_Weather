@@ -4,6 +4,7 @@ namespace Simbirsoft_Weather.Models
 {
     public class Clothes
     {
+        public int Id { get; set; }
         public ClothesType ClothesType { get; set; }
         public string Name { get; set; }
         public double MinTemperature { get; set; }

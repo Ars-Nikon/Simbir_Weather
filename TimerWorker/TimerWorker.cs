@@ -11,7 +11,7 @@ namespace TimerWorker
 {
     class TimerWorker : ITimerWorker
     {
-        //private readonly DbContextOptions<> _db;
+        private readonly DbContextOptions<EventContext> _dbOptions;
         private readonly int _interval;
         private readonly int _maxDegreeOfParallelism;
         private readonly string _notificationServerHost;
@@ -21,7 +21,7 @@ namespace TimerWorker
             dynamic json = JsonConvert.DeserializeObject(File.ReadAllText(configureFilePath));
 
             string connectionString = json.ConnectionStrings.DefaultConnection;
-            //_dbOptions = new DbContextOptionsBuilder<>().UseNpgsql(connectionString).Options;
+            _dbOptions = new DbContextOptionsBuilder<EventContext>().UseSqlServer(connectionString).Options;
             _interval = json.TimerConfiguration.Interval;
             _maxDegreeOfParallelism = json.TimerConfiguration.MaxDegreeOfParallelism;
             _notificationServerHost = json.NotificationServerHost;
@@ -29,30 +29,45 @@ namespace TimerWorker
 
         public async Task StartTimerAsync()
         {
-            var result = SendReadyNotificationIdToServer(111);
             while (true)
             {
                 try
                 {
                     await Task.Delay(_interval);
 
-                    ParallelOptions parallelOptions = new ParallelOptions()
-                    {
-                        MaxDegreeOfParallelism = _maxDegreeOfParallelism
-                    };
-
-                    //Parallel.ForEach(_dateTimes, parallelOptions, t =>
+                    //ParallelOptions parallelOptions = new ParallelOptions()
                     //{
-                    //    if (DateTime.Now > t.DateTime && !t.IsDone)
-                    //    {
-                    //        var result = SendReadyNotificationIdToServer(t.id);
+                    //    MaxDegreeOfParallelism = _maxDegreeOfParallelism
+                    //};
 
-                    //        if (result == HttpStatusCode.OK)
-                    //        {
-                    //            t.IsDone = true;
-                    //        }
-                    //    }
-                    //});
+                    using (EventContext db = new EventContext(_dbOptions))
+                    {
+                        foreach (var t in db.Events)
+                        {
+                            if (DateTime.Now > t.DateSendMessage && !t.Done)
+                            {
+                                var result = SendReadyNotificationIdToServer(t.Id);
+
+                                if (result == HttpStatusCode.OK)
+                                {
+                                    t.Done = true;
+                                    db.SaveChanges();
+                                }
+                            }
+                        }
+                        //Parallel.ForEach(db., parallelOptions, t =>
+                        //{
+                        //    if (DateTime.Now > t.DateTime && !t.IsDone)
+                        //    {
+                        //        var result = SendReadyNotificationIdToServer(t.id);
+
+                        //        if (result == HttpStatusCode.OK)
+                        //        {
+                        //            t.IsDone = true;
+                        //        }
+                        //    }
+                        //});
+                    }
                 }
                 catch
                 {

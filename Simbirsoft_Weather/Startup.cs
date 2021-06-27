@@ -36,12 +36,16 @@ namespace Simbirsoft_Weather
 
             services.AddDbContext<EventContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("Connection")));
-          
+
+            services.AddDbContext<ClothesContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+            services.AddScoped<IClothesRepository, ClothesRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IClothingConsultant, ClothingConsultant>();
             services.Configure<SmtpClientConfiguration>(Configuration.GetSection("SmtpClientConfiguration"));
-
             services.AddScoped<INotificationSender, MailNotificationSender>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<INotificationWritter, NotificationWritter>();
 
             services.AddIdentity<User, IdentityRole>(opts =>
             {

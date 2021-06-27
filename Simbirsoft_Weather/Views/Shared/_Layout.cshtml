@@ -38,13 +38,17 @@
                 <!-- Default snippet for navigation -->
                 <div class="main-navigation">
                     <ul class="menu">
-                        <li class="menu-item current-menu-item"><a asp-action="index" asp-controller="Home">Погода</a></li>
-
+                        <li class="menu-item current-menu-item">
+                            <a asp-action="index" asp-controller="Home"><i class="fa fa-sun-o"></i>  Погода</a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-action="Event" asp-controller="Home"><i class="fa fa-calendar"></i>  Запланировать событие</a>
+                        </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                    <li class="menu-item">
-                        <a asp-action="Login" asp-controller="Account"><i class="fa fa-user-circle"></i> @await Component.InvokeAsync("UserIdentityName", User.Identity.Name)</a>
-                    </li>
+                            <li class="menu-item">
+                                <a asp-action="Login" asp-controller="Account"><i class="fa fa-user-circle"></i> @await Component.InvokeAsync("UserIdentityName", User.Identity.Name)</a>
+                            </li>
                         }
                         else
                         {
@@ -52,7 +56,6 @@
                                 <a asp-action="Login" asp-controller="Account"><i class="fa fa-user-secret"></i> Вход</a>
                             </li>
                         }
-
 
                     </ul> <!-- .menu -->
                 </div> <!-- .main-navigation -->
@@ -64,16 +67,13 @@
     </div>
 
 
-
     <footer class="site-footer">
         <p class="colophon">Летний Интенсив 2021 группа: kb1_dotnet </p>
     </footer> <!-- .site-footer -->
 
 
-    <script src="~/WeatherFront/js/jquery-1.11.1.min.js"></script>
-    <script src="~/WeatherFront/js/plugins.js"></script>
-    <script src="~/WeatherFront/js/app.js"></script>
 
-    </body>
+
+</body>
 
 </html>

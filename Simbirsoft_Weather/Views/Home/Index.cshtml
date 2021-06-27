@@ -1,19 +1,23 @@
 ﻿@{
-
+    var ru = new CultureInfo("ru-RU");
 }
 @model Simbirsoft_Weather.Models.IndexModel
 
 <div class="hero" data-bg-image="">
     <div class="container">
+        @if (Model.Result != null)
+        {
+            <h1 class="text-left  text-success">@Model.Result</h1>
+        }
         <form asp-action="Index" class="find-location">
             <input type="text" list="Region1" asp-for="Region" class="form-control" />
             <datalist id="Region1">
                 @foreach (var item in ViewBag.Cities)
-                    {
-                <option>@item.City_Ru</option>
-                    }
+                {
+                    <option>@item.City_Ru</option>
+                }
             </datalist>
-            <input type="submit" value="Find">
+            <input type="submit" value="Найти">
         </form>
 
     </div>
@@ -24,7 +28,7 @@
             <div class="today forecast">
                 <div class="forecast-header">
                     <div class="day">@Model.DayOfWeek.GetValueOrDefault((int)Model.Weathers[0].Date.DayOfWeek)</div>
-                    <div class="date">@Model.Weathers[0].Date.ToString("M")</div>
+                    <div class="date">@Model.Weathers[0].Date.ToString("M",ru)</div>
                 </div> <!-- .forecast-header -->
                 <div class="forecast-content">
                     <div class="location">@Model.Region</div>

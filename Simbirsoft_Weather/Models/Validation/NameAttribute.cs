@@ -7,21 +7,27 @@ using System.Threading.Tasks;
 
 namespace Simbirsoft_Weather.Models.Validation
 {
-    public class NameAttribute : ValidationAttribute
+    public class NameValidatorAttribute : ValidationAttribute
     {
         public override bool IsValid(object value)
         {
 
-            string patternValid = "^(?![0-9]*$)[^@_!#$%^&*()<>?/\\|}{~:][a-zA-Z0-9]+$";
+            string patternValid = @"\s|\d|\W";
             if (value != null)
             {
-                if (Regex.IsMatch(Convert.ToString(value),patternValid, RegexOptions.IgnoreCase))
+                if (Regex.IsMatch(Convert.ToString(value), patternValid, RegexOptions.IgnoreCase))
+                {
+                    return false;
+                }
+                else
                 {
                     return true;
                 }
             }
-           
-            return false;
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Simbirsoft_Weather.Models;
+using Simbirsoft_Weather.Services;
 
 namespace Simbirsoft_Weather.Controllers
 {
@@ -20,12 +21,13 @@ namespace Simbirsoft_Weather.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly List<City> Cities;
         private readonly EventContext EventDb;
+        private readonly IClothingConsultant ClothesGet;
 
 
-        
 
-        public HomeController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<HomeController> logger, EventContext eventContext, CityContext cityContext)
+        public HomeController(UserManager<User> userManager, IClothingConsultant cloth, SignInManager<User> signInManager, ILogger<HomeController> logger, EventContext eventContext, CityContext cityContext)
         {
+            ClothesGet = cloth;
             Cities = cityContext.Cities.ToList();
             EventDb = eventContext;
             _userManager = userManager;
@@ -64,7 +66,7 @@ namespace Simbirsoft_Weather.Controllers
             {
                 ModelState.AddModelError("Event.Region", "Город не найдет");
             }
-            if (eventModel.Event.DateSendMessage>eventModel.Event.DateEvent)
+            if (eventModel.Event.DateSendMessage > eventModel.Event.DateEvent)
             {
                 ModelState.AddModelError("Event.DateEvent", "Дата прогноза не может быть позже даты отправки уведомления");
             }
@@ -88,30 +90,31 @@ namespace Simbirsoft_Weather.Controllers
                 return View(new EventModel() { User = user });
             }
 
-            return RedirectToAction("Index", new IndexModel{ Result ="Событие Запланировано" });
+            return RedirectToAction("Index", new IndexModel { Result = "Событие Запланировано" });
         }
 
 
 
         public async Task<IActionResult> Index(IndexModel indexModel)
         {
-            string location = "Москва";
-
+            var SendModel = new IndexModel();
+            SendModel.Result = indexModel.Result;
             WeatherApi weather;
+            SendModel.Region = "Москва";
+
+
+            User user = null;
 
             if (User.Identity.IsAuthenticated && _userManager.FindByNameAsync(User.Identity.Name).Result == null)
             {
                 await _signInManager.SignOutAsync();
                 return RedirectToAction("Index");
+            }//удаляет доступ у пользователя которго удалили из бд 
+
+            if (User.Identity.IsAuthenticated)
+            {
+                user = await _userManager.FindByNameAsync(User.Identity.Name);
             }
-
-
-
-            IPAddress remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
-
-            Console.WriteLine(remoteIpAddress.ToString());
-
-
 
             if (indexModel.Region != null && Cities.FirstOrDefault(x => x.City_Ru.ToLower() == indexModel.Region.Trim().ToLower()) != null)
             {
@@ -122,34 +125,45 @@ namespace Simbirsoft_Weather.Controllers
             {
                 if (User.Identity.IsAuthenticated)
                 {
-
-                    var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
                     if (user.Location != null)
                     {
-                        location = user.Location;
+                        SendModel.Region = user.Location;
                         weather = new WeatherApi(user.Location);
                     }
                     else
                     {
-                        weather = new WeatherApi(location);
+                        weather = new WeatherApi(SendModel.Region);
                     }
-
-
                 }
                 else
                 {
-
-
-                    weather = new WeatherApi(location);
-
+                    weather = new WeatherApi(SendModel.Region);
                 }
             }
+
             ViewBag.Cities = Cities;
-            var weather5days = weather.WheatherFor5Day();
-            var WeatherForTime = weather.WheatherForTime(weather5days[0].Date.ToString());
-            location = weather5days[0].City.Name;
-            return View(new IndexModel { Weathers = weather5days, Region = location, WeatherForTime = WeatherForTime, Result =indexModel.Result });
+            SendModel.Weathers = weather.WheatherFor5Day();
+            SendModel.WeatherForTime = weather.WheatherForTime(SendModel.Weathers[0].Date.ToString());
+            SendModel.Region = SendModel.Weathers[0].City.Name;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                if (user.Gender.Value)
+                {
+                    SendModel.ClothesMan = ClothesGet.GetManRecommendation(SendModel.Weathers[0]);
+                }
+                else
+                {
+                    SendModel.ClothesWoman = ClothesGet.GetWomanRecommendation(SendModel.Weathers[0]);
+                }
+            }
+            else
+            {
+                var clothes = ClothesGet.GetRecommendation(SendModel.Weathers[0]);
+                SendModel.ClothesMan = clothes.Man;
+                SendModel.ClothesWoman = clothes.Woman;
+            }
+            return View(SendModel);
         }
 
 

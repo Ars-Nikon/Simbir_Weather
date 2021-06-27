@@ -6,6 +6,7 @@ using Simbirsoft_Weather.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Simbirsoft_Weather.Controllers
@@ -89,10 +90,7 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditGender(LoginViewModel loginViewModel)
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
@@ -115,10 +113,7 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditRegion(LoginViewModel loginViewModel)
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var model = loginViewModel.EditModel;
             if (model.Region == null)
@@ -149,25 +144,33 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditName(LoginViewModel loginViewModel)
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var model = loginViewModel.EditModel;
             if (model.Name == null)
             {
-                ModelState.AddModelError("EditModel.Name", "Введите имя");
+                ModelState.AddModelError("EditModel.Name", "Введите имя");         
+            }
+            string patternValid = @"\s|\d|\W";
+            if (model.Name!=null && Regex.IsMatch(model.Name, patternValid, RegexOptions.IgnoreCase))
+            {
+                ModelState.AddModelError("EditModel.Name", "Имя должно быть на кириллице или латинице без пробелов и цифр");
+            }
+
+
+            if (!ModelState.IsValid)
+            {
                 ViewBag.Cities = Citydb.Cities.ToList();
                 loginViewModel.EditModel.AddUser(user);
                 return View("login", loginViewModel);
             }
-
-
-            user.Name = model.Name;
-            await _userManager.UpdateAsync(user);
-            model.Result = "Имя изменено";
-            return RedirectToAction("Login", model);
+            else
+            {
+                user.Name = model.Name;
+                await _userManager.UpdateAsync(user);
+                model.Result = "Имя изменено";
+                return RedirectToAction("Login", model);
+            } 
         }
 
         [HttpPost]
@@ -178,10 +181,7 @@ namespace Simbirsoft_Weather.Controllers
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var model = loginViewModel.EditPassword;
 
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+
 
             if (model.Password != null)
             {

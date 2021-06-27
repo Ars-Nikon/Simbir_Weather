@@ -5,9 +5,9 @@
 }
 @model Simbirsoft_Weather.Models.RegistrationModel
    
+
     <div class="container">
         <h3 class="text-left">Регистрация</h3>
-
         <form method="post" asp-controller="Account" asp-action="Registration">
             <div class="badge-danger" asp-validation-summary="All"></div>
             <fieldset class="form-group">
@@ -21,12 +21,11 @@
                 <div>
                     <label asp-for="Name"></label><br />
                     <input asp-for="Name" autocomplete="off" />
-
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label asp-for="Region" class="form-label"></label>
-                <input type="text" list="Region1" asp-for="Region" class="form-control" />
+                <input type="text" autocomplete="off" list="Region1" asp-for="Region" class="form-control" />
                 <datalist id="Region1">
                     @foreach (var item in ViewBag.Cities)
                     {
@@ -38,9 +37,9 @@
                 <div>
                     <span>Пол</span><br />
                     <label asp-for="Gender">Женский</label>
-                    <input type="radio" asp-for="Gender" value="true">
+                    <input type="radio" asp-for="Gender" value="false">
                     <label asp-for="Gender">Мужской</label>
-                    <input type="radio" asp-for="Gender" value="false" />
+                    <input type="radio" asp-for="Gender" value="true" />
                 </div>
             </fieldset>
             <fieldset class="form-group">

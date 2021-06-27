@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Simbirsoft_Weather.Models.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace Simbirsoft_Weather.Models
 
         [Display(Name = "Ваше имя:")]
         [Required(ErrorMessage = "Не указано имя")]
+        [NameValidator(ErrorMessage = "Имя должно быть на кириллице или латинице без пробелов и цифр")]
         public string Name { get; set; }
 
         [Display(Name = "Город: ")]

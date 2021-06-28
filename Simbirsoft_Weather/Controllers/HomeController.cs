@@ -47,6 +47,9 @@ namespace Simbirsoft_Weather.Controllers
             }
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            
+
+
 
             ViewBag.Cities = Cities;
             return View(new EventModel() { User = user });
@@ -56,7 +59,7 @@ namespace Simbirsoft_Weather.Controllers
         [HttpPost]
         public async Task<IActionResult> Event(EventModel eventModel)
         {
-
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (User.Identity.IsAuthenticated && _userManager.FindByNameAsync(User.Identity.Name).Result == null)
             {
                 await _signInManager.SignOutAsync();
@@ -80,12 +83,13 @@ namespace Simbirsoft_Weather.Controllers
             }
             if (ModelState.IsValid)
             {
+
+                eventModel.Event.Id_User = user.Id;
                 EventDb.Add(eventModel.Event);
                 EventDb.SaveChanges();
             }
             else
             {
-                var user = await _userManager.FindByNameAsync(User.Identity.Name);
                 ViewBag.Cities = Cities;
                 return View(new EventModel() { User = user });
             }

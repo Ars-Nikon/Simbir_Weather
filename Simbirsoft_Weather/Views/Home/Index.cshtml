@@ -9,8 +9,12 @@
         {
             <h1 class="text-left  text-success">@Model.Result</h1>
         }
+        @if (Model.ErrorMessege != null)
+        {
+            <h1 class="text-left  text-danger">@Model.ErrorMessege</h1>
+        }
         <form asp-action="Index" class="find-location">
-            <input type="text" autocomplete="off" list="Region1" asp-for="Region" class="form-control" />
+            <input type="text" autocomplete="off" maxlength="30" list="Region1" asp-for="Region" class="form-control" />
             <datalist id="Region1">
                 @foreach (var item in ViewBag.Cities)
                 {
@@ -39,7 +43,7 @@
                         </div>
                     </div>
                     <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)Model.Weathers[0].SpeedWind) м/с</span>
-                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@Model.Weathers[0].ProbabilityRain %</span>
+                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(Model.Weathers[0].ProbabilityRain *100)) %</span>
                     <br />
                     <h2>@Model.Weathers[0].Main</h2>
                 </div>
@@ -62,7 +66,7 @@
                     </div>
                     <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
                     <span></span>
-                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@day.ProbabilityRain %</span>
+                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(day.ProbabilityRain *100)) %</span>
                 </div>
             }
         </div>

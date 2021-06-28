@@ -14,7 +14,7 @@
             <form method="post" asp-controller="Account" asp-action="EditName">
                 <fieldset class="form-group">
                     <label asp-for="@Model.EditModel.Name">Имя</label><br />
-                    <input asp-for="@Model.EditModel.Name" autocomplete="off" />
+                    <input asp-for="@Model.EditModel.Name" maxlength="20" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="EditModel.Name"></span>
                 </fieldset>
                 <div>
@@ -41,7 +41,7 @@
             <form method="post" asp-controller="Account" asp-action="EditRegion">
                 <fieldset class="form-group">
                     <label asp-for="EditModel.Region" class="form-label">Город</label>
-                    <input type="text" list="Region1" asp-for="EditModel.Region" class="form-control" />
+                    <input type="text" list="Region1" maxlength="20" asp-for="EditModel.Region" class="form-control" />
                     <datalist id="Region1">
                         @foreach (var item in ViewBag.Cities)
                         {
@@ -60,13 +60,13 @@
             <form method="post" asp-controller="Account" asp-action="EditEmail">
                 <fieldset class="form-group">
                     <label asp-for="@Model.EditModel.Email">е-mail</label><br />
-                    <input type="email" asp-for="@Model.EditModel.Email" autocomplete="off" />
+                    <input type="email" maxlength="30" asp-for="@Model.EditModel.Email" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="@Model.EditModel.Email"></span>
                 </fieldset>
                 <fieldset class="form-group">
                     <div>
                         <label asp-for="@Model.EditModel.Password">Подтвердите пароль для смены e-mail</label><br />
-                        <input id="password-input" autocomplete="off" type="password" asp-for="@Model.EditModel.Password" />
+                        <input id="password-input" autocomplete="off" type="password" maxlength="20" asp-for="@Model.EditModel.Password" />
                         <span class="text-danger" asp-validation-for="@Model.EditModel.Password"></span>
                         <br />
                     </div>
@@ -82,13 +82,13 @@
             <form method="post" asp-controller="Account" asp-action="EditPassword">
                 <fieldset class="form-group">
                     <label asp-for="@Model.EditPassword.NewPassword">Новый Пароль</label><br />
-                    <input type="password" asp-for="@Model.EditPassword.NewPassword" autocomplete="off" />
+                    <input type="password"  maxlength="20" asp-for="@Model.EditPassword.NewPassword" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="@Model.EditPassword.NewPassword"></span>
                 </fieldset>
                 <fieldset class="form-group">
                     <div>
                         <label asp-for="@Model.EditPassword.Password">Старый Пароль</label><br />
-                        <input id="password-input2" autocomplete="off" type="password" asp-for="@Model.EditPassword.Password" />
+                        <input id="password-input2" maxlength="20" autocomplete="off" type="password" asp-for="@Model.EditPassword.Password" />
                         <span class="text-danger" asp-validation-for="@Model.EditPassword.Password"></span>
                         <br />
                     </div>
@@ -116,13 +116,13 @@ else
 
             <fieldset class="form-group">
                 <label asp-for="@Model.LoginModel.Email"></label><br />
-                <input type="email" asp-for="@Model.LoginModel.Email" autocomplete="off" />
+                <input type="email" maxlength="40" asp-for="@Model.LoginModel.Email" autocomplete="off" />
                 <span asp-validation-for="@Model.LoginModel.Email"></span>
             </fieldset>
 
             <fieldset class="form-group">
                 <label asp-for="@Model.LoginModel.Password"></label><br />
-                <input type="password" id="password-input" autocomplete="off" asp-for="@Model.LoginModel.Password">
+                <input type="password" maxlength="20" id="password-input" autocomplete="off" asp-for="@Model.LoginModel.Password">
                 <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
                 <br />
 

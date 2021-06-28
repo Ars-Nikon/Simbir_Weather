@@ -11,8 +11,9 @@ namespace Simbirsoft_Weather.Models
     public class RegistrationModel
     {
 
-        [EmailAddress(ErrorMessage = "Некорректный адрес")]
+      
         [Display(Name = "Ваш e-mail:")]
+        [EmailValidator(ErrorMessage = "Некорректный адрес")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Не указан пароль")]
@@ -33,7 +34,7 @@ namespace Simbirsoft_Weather.Models
         [Required(ErrorMessage = "Не указан регион")]
         public string Region { get; set; }
 
-       
+
         [Required(ErrorMessage = "Не указан пол")]
         public bool? Gender { get; set; } // false - woman, true - man 
     }

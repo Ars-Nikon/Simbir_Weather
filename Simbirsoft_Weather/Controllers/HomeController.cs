@@ -25,10 +25,10 @@ namespace Simbirsoft_Weather.Controllers
 
 
 
-        public HomeController(UserManager<User> userManager, IClothingConsultant cloth, SignInManager<User> signInManager, ILogger<HomeController> logger, EventContext eventContext, CityContext cityContext)
+        public HomeController(UserManager<User> userManager, IClothingConsultant cloth, SignInManager<User> signInManager, ILogger<HomeController> logger, EventContext eventContext, GetListCities cities)
         {
             ClothesGet = cloth;
-            Cities = cityContext.Cities.ToList();
+            Cities = cities.Cities();
             EventDb = eventContext;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -123,21 +123,29 @@ namespace Simbirsoft_Weather.Controllers
             }
             else
             {
-                if (User.Identity.IsAuthenticated)
+                if (indexModel.Region != null)
                 {
-                    if (user.Location != null)
+                    SendModel.ErrorMessege = "Город не найден";
+                    weather = new WeatherApi(SendModel.Region);
+                }
+                else
+                {
+                    if (User.Identity.IsAuthenticated)
                     {
-                        SendModel.Region = user.Location;
-                        weather = new WeatherApi(user.Location);
+                        if (user.Location != null)
+                        {
+                            SendModel.Region = user.Location;
+                            weather = new WeatherApi(user.Location);
+                        }
+                        else
+                        {
+                            weather = new WeatherApi(SendModel.Region);
+                        }
                     }
                     else
                     {
                         weather = new WeatherApi(SendModel.Region);
                     }
-                }
-                else
-                {
-                    weather = new WeatherApi(SendModel.Region);
                 }
             }
 

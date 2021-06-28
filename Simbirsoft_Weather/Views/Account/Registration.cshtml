@@ -13,19 +13,19 @@
             <fieldset class="form-group">
                 <div>
                     <label asp-for="Email"></label><br />
-                    <input asp-for="Email" autocomplete="off" type="email" />
+                    <input asp-for="Email"  maxlength="40" autocomplete="off" type="email" />
 
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <div>
                     <label asp-for="Name"></label><br />
-                    <input asp-for="Name" autocomplete="off" />
+                    <input asp-for="Name" maxlength="20" autocomplete="off" />
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label asp-for="Region" class="form-label"></label>
-                <input type="text" autocomplete="off" list="Region1" asp-for="Region" class="form-control" />
+                <input type="text" autocomplete="off" list="Region1" maxlength="30" asp-for="Region" class="form-control" />
                 <datalist id="Region1">
                     @foreach (var item in ViewBag.Cities)
                     {
@@ -45,13 +45,13 @@
             <fieldset class="form-group">
                 <div>
                     <label asp-for="Password"></label><br />
-                    <input asp-for="Password" type="password" autocomplete="off" id="password-input" />
+                    <input asp-for="Password" type="password" maxlength="20" autocomplete="off" id="password-input" />
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <div>
                     <label asp-for="PasswordConfirm"></label><br />
-                    <input id="password-input2" type="password" autocomplete="off" asp-for="PasswordConfirm" />
+                    <input id="password-input2" type="password" autocomplete="off" maxlength="20" asp-for="PasswordConfirm" />
                     <label><input type="checkbox" class="password-checkbox" autocomplete="off">Показать пароль</label>
                 </div>
             </fieldset>

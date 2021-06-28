@@ -10,6 +10,8 @@ namespace Simbirsoft_Weather.Models
     {
         public string Region { get; set; }
 
+        public string ErrorMessege { get; set; }
+
         public string Result { get; set; }
 
         public List<ForecastView> Weathers { get; set; }

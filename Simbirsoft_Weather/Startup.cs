@@ -38,6 +38,8 @@ namespace Simbirsoft_Weather
             services.AddDbContext<EventContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
+            services.AddScoped<GetListCities>();
+
             services.AddDbContext<ClothesContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("Connection")));
             services.AddScoped<IClothesRepository, ClothesRepository>();
@@ -51,11 +53,11 @@ namespace Simbirsoft_Weather
             services.AddIdentity<User, IdentityRole>(opts =>
             {
                 opts.User.RequireUniqueEmail = true;
-                opts.Password.RequiredLength = 8;   // ìèíèìàëüíàÿ äëèíà
-                opts.Password.RequireNonAlphanumeric = false;   // òðåáóþòñÿ ëè íå àëôàâèòíî-öèôðîâûå ñèìâîëû
-                opts.Password.RequireLowercase = false; // òðåáóþòñÿ ëè ñèìâîëû â íèæíåì ðåãèñòðå
-                opts.Password.RequireUppercase = false; // òðåáóþòñÿ ëè ñèìâîëû â âåðõíåì ðåãèñòðå
-                opts.Password.RequireDigit = false; // òðåáóþòñÿ ëè öèôðû
+                opts.Password.RequiredLength = 8;   
+                opts.Password.RequireNonAlphanumeric = false;   
+                opts.Password.RequireLowercase = false; 
+                opts.Password.RequireUppercase = false; 
+                opts.Password.RequireDigit = false; 
             }).AddEntityFrameworkStores<IdentityContext>();
 
             services.AddControllersWithViews();

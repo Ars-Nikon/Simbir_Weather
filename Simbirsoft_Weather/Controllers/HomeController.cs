@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -47,9 +48,9 @@ namespace Simbirsoft_Weather.Controllers
             }
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            
 
 
+            var ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
             ViewBag.Cities = Cities;
             return View(new EventModel() { User = user });
@@ -80,6 +81,10 @@ namespace Simbirsoft_Weather.Controllers
             if (eventModel.Event.DateEvent <= DateTime.UtcNow.AddHours(3))
             {
                 ModelState.AddModelError("Event.DateEvent", "Дата прогноза должна быть больше сегодняшнего числа");
+            }
+            if (eventModel.Event.DateEvent > eventModel.Event.DateSendMessage.Value.AddDays(4))
+            {
+                ModelState.AddModelError("Event.DateEvent", $"Дата уведомления не может быть раньше чем {eventModel.Event.DateEvent.Value.AddDays(-4).ToString("M", new CultureInfo("ru-RU"))}");
             }
             if (ModelState.IsValid)
             {

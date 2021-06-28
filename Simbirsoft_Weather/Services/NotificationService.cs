@@ -34,7 +34,7 @@ namespace Simbirsoft_Weather.Services
             if (user == null) return;
 
             WeatherApi api = new WeatherApi(eventInfo.Region);
-            int days = (eventInfo.DateEvent - DateTime.Now).Value.Days;
+            int days = (eventInfo.DateEvent - DateTime.Now).Value.Days + 1;
             var forecast = api.WheatherFor5Day()[days];
             var forecastForTime = api.WheatherForTime(forecast.Date.ToString());
             var recommendation = (bool)user.Gender ? _clothingConsultant.GetWomanRecommendation(forecast) : _clothingConsultant.GetManRecommendation(forecast);
@@ -44,8 +44,8 @@ namespace Simbirsoft_Weather.Services
             string email = user.Email;
             string subject = "Weather";
             string message = (bool)user.Gender
-                ? _notificationWritter.WriteNotificationPageForWoman(forecast, forecastForTime, recommendation, title, description)
-                : _notificationWritter.WriteNotificationPageForMan(forecast, forecastForTime, recommendation, title, description);
+                ? _notificationWritter.WriteNotificationPageForWoman(forecast, forecastForTime, recommendation, title, description, user.Name)
+                : _notificationWritter.WriteNotificationPageForMan(forecast, forecastForTime, recommendation, title, description, user.Name);
 
             await _notificationSender.SendNotificationAsync(email, subject, message);
 

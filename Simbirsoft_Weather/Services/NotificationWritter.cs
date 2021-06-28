@@ -9,6 +9,18 @@ namespace Simbirsoft_Weather.Services
 {
     public class NotificationWritter : INotificationWritter
     {
+        private readonly Dictionary<ClothesType, string> clothesName;
+
+        public NotificationWritter()
+        {
+            clothesName = new Dictionary<ClothesType, string>();
+            clothesName.Add(ClothesType.Head, "Головной убор");
+            clothesName.Add(ClothesType.BodyTop, "Верхняя одежда");
+            clothesName.Add(ClothesType.BodyBottom, "Нижняя одежда");
+            clothesName.Add(ClothesType.Legs, "Обувь");
+            clothesName.Add(ClothesType.Other, "Другое");
+        }
+
         public string WriteNotificationPageForAll(WeatherApi.ForecastView forecast,
             Dictionary<string, WeatherApi.ForecastData> weatherForTime,
             Recommendation recommendation,
@@ -57,7 +69,8 @@ namespace Simbirsoft_Weather.Services
             Dictionary<string, WeatherApi.ForecastData> weatherForTime,
             Person man,
             string title,
-            string description)
+            string description,
+            string userName)
         {
             return ForWhom(Models.Enums.ForWhom.Man,
                 title,
@@ -80,16 +93,18 @@ namespace Simbirsoft_Weather.Services
                 weatherForTime[weatherForTime.Keys.Skip(1).Take(4).First()].Wind.Deg / 10d,
                 weatherForTime[weatherForTime.Keys.Skip(1).Take(4).First()].WeatherDescriptions[0].Description,
                 "Мужчина",
-                man.Head.ClothesType,
+                clothesName[man.Head.ClothesType],
                 man.Head.Name,
-                man.BodyTop.ClothesType,
+                clothesName[man.BodyTop.ClothesType],
                 man.BodyTop.Name,
-                man.BodyBottom.ClothesType,
+                clothesName[man.BodyBottom.ClothesType],
                 man.BodyBottom.Name,
-                man.Legs.ClothesType,
+                clothesName[man.Legs.ClothesType],
                 man.Legs.Name,
-                man.Other.ClothesType,
-                man.Other.Name
+                clothesName[man.Other.ClothesType],
+                man.Other.Name,
+                userName,
+                forecast.ProbabilityRain
                 );
         }
 
@@ -97,7 +112,8 @@ namespace Simbirsoft_Weather.Services
             Dictionary<string, WeatherApi.ForecastData> weatherForTime,
             Person woman,
             string title,
-            string description)
+            string description,
+            string userName)
         {
             return ForWhom(Models.Enums.ForWhom.Man,
                 title,
@@ -120,16 +136,18 @@ namespace Simbirsoft_Weather.Services
                 weatherForTime[weatherForTime.Keys.Skip(1).Take(4).First()].Wind.Deg / 10d,
                 weatherForTime[weatherForTime.Keys.Skip(1).Take(4).First()].WeatherDescriptions[0].Description,
                 "Женщина",
-                woman.Head.ClothesType,
+                clothesName[woman.Head.ClothesType],
                 woman.Head.Name,
-                woman.BodyTop.ClothesType,
+                clothesName[woman.BodyTop.ClothesType],
                 woman.BodyTop.Name,
-                woman.BodyBottom.ClothesType,
+                clothesName[woman.BodyBottom.ClothesType],
                 woman.BodyBottom.Name,
-                woman.Legs.ClothesType,
+                clothesName[woman.Legs.ClothesType],
                 woman.Legs.Name,
-                woman.Other.ClothesType,
-                woman.Other.Name
+                clothesName[woman.Other.ClothesType],
+                woman.Other.Name,
+                userName,
+                forecast.ProbabilityRain * 100
                 );
         }
 

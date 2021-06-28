@@ -58,7 +58,7 @@
                             <icon icon="@day.Icon"></icon>
                         </div>
                         <div class="degree">@(Math.Round(day.Maxtemp))<sup>o</sup>C</div>
-                        <small>18<sup>o</sup></small>
+                        <small>@Math.Round(day.Mintemp) <sup>o</sup></small>
                     </div>
                     <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
                     <span></span>

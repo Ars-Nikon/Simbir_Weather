@@ -15,7 +15,7 @@ namespace Simbirsoft_Weather.Models.Validation
             string patternValid = @"\s|\d|\W";
             if (value != null)
             {
-                if (Regex.IsMatch(Convert.ToString(value), patternValid, RegexOptions.IgnoreCase))
+                if (Regex.IsMatch(Convert.ToString(value).Trim(), patternValid, RegexOptions.IgnoreCase))
                 {
                     return false;
                 }

@@ -44,6 +44,10 @@ namespace Simbirsoft_Weather.Controllers
             {
                 ModelState.AddModelError("Город", "Город не найдет");
             }
+            if (model.Email == null)
+            {
+                ModelState.AddModelError("Email", "Почта не указана");
+            }
             if (model.Email != null)
             {
                 var result = await _userManager.FindByEmailAsync(model.Email);

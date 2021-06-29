@@ -14,11 +14,13 @@ namespace Simbirsoft_Weather.Services
             Dictionary<string, WeatherApi.ForecastData> weatherForTime,
             Person man,
             string title,
-            string description);
+            string description,
+            string userName);
         string WriteNotificationPageForWoman(WeatherApi.ForecastView forecast,
             Dictionary<string, WeatherApi.ForecastData> weatherForTime,
             Person woman,
             string title,
-            string description);
+            string description,
+            string userName);
     }
 }

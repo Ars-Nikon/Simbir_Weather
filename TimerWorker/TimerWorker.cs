@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,13 +27,13 @@ namespace TimerWorker
             _notificationServerHost = json.NotificationServerHost;
         }
 
-        public async Task StartTimerAsync()
+        public Task StartTimerAsync()
         {
             while (true)
             {
                 try
                 {
-                    await Task.Delay(_interval);
+                    Task.Delay(_interval).Wait();
 
                     //ParallelOptions parallelOptions = new ParallelOptions()
                     //{
@@ -42,6 +42,7 @@ namespace TimerWorker
 
                     using (EventContext db = new EventContext(_dbOptions))
                     {
+                        Console.WriteLine(db.Events.Count());
                         foreach (var t in db.Events)
                         {
                             if (DateTime.Now > t.DateSendMessage && !t.Done)
@@ -52,6 +53,7 @@ namespace TimerWorker
                                 {
                                     t.Done = true;
                                     db.SaveChanges();
+                                    Console.WriteLine($"Send {t.Id}");
                                 }
                             }
                         }
@@ -73,7 +75,7 @@ namespace TimerWorker
                 {
 
                 }
-                
+
             }
         }
 

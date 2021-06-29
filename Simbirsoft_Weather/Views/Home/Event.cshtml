@@ -1,8 +1,50 @@
 ﻿@{
 
 }
+@model Simbirsoft_Weather.Models.EventModel
 <div class="container">
-    <h1 class="text-center">Запланировать событие</h1>>
-   
+    <h1 class="text-center">Запланировать событие</h1>
+
+    <form method="post" asp-controller="home" asp-action="Event">
+        <div class="badge-danger" asp-validation-summary="All"></div>
+        <fieldset class="form-group">
+            <div>
+                <label asp-for="Event.NameEvent"></label><br />
+                <input asp-for="Event.NameEvent" maxlength="50" type="text" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div>
+                <label asp-for="Event.Description"></label><br />
+                <input asp-for="Event.Description" maxlength="50" type="text" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label asp-for="Event.Region"></label><br />
+            <input type="text" list="Region1" asp-for="Event.Region" maxlength="30" value="@(Model.User?.Location ?? "null")" class="form-control" />
+            <datalist id="Region1">
+                @foreach (var item in ViewBag.Cities)
+                {
+                    <option>@item.City_Ru</option>
+                }
+            </datalist>
+        </fieldset>
+        <fieldset class="form-group">
+            <div>
+                <label asp-for="Event.DateEvent"></label><br />
+                <input asp-for="Event.DateEvent" type="date" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div>
+                <label asp-for="Event.DateSendMessage"></label><br />
+                <input asp-for="Event.DateSendMessage" type="datetime-local" />
+            </div>
+        </fieldset>
+        <div>
+            <input type="submit" class="btn pull-left" value="Запланировать" />
+            <a asp-action="index" asp-controller="Home" class="btn badge-danger pull-right">Отмена</a>
+        </div>
+    </form>
 
 </div>

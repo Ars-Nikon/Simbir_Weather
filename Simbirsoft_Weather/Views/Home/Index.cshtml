@@ -1,19 +1,27 @@
 ﻿@{
-
+    var ru = new CultureInfo("ru-RU");
 }
 @model Simbirsoft_Weather.Models.IndexModel
 
 <div class="hero" data-bg-image="">
     <div class="container">
+        @if (Model.Result != null)
+        {
+            <h1 class="text-left  text-success">@Model.Result</h1>
+        }
+        @if (Model.ErrorMessege != null)
+        {
+            <h1 class="text-left  text-danger">@Model.ErrorMessege</h1>
+        }
         <form asp-action="Index" class="find-location">
-            <input type="text" list="Region1" asp-for="Region" class="form-control" />
+            <input type="text" autocomplete="off" maxlength="30" list="Region1" asp-for="Region" class="form-control" />
             <datalist id="Region1">
                 @foreach (var item in ViewBag.Cities)
-                    {
-                <option>@item.City_Ru</option>
-                    }
+                {
+                    <option>@item.City_Ru</option>
+                }
             </datalist>
-            <input type="submit" value="Find">
+            <input type="submit" value="Найти">
         </form>
 
     </div>
@@ -24,7 +32,7 @@
             <div class="today forecast">
                 <div class="forecast-header">
                     <div class="day">@Model.DayOfWeek.GetValueOrDefault((int)Model.Weathers[0].Date.DayOfWeek)</div>
-                    <div class="date">@Model.Weathers[0].Date.ToString("M")</div>
+                    <div class="date">@Model.Weathers[0].Date.ToString("M", ru)</div>
                 </div> <!-- .forecast-header -->
                 <div class="forecast-content">
                     <div class="location">@Model.Region</div>
@@ -35,6 +43,7 @@
                         </div>
                     </div>
                     <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)Model.Weathers[0].SpeedWind) м/с</span>
+                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(Model.Weathers[0].ProbabilityRain *100)) %</span>
                     <br />
                     <h2>@Model.Weathers[0].Main</h2>
                 </div>
@@ -53,10 +62,11 @@
                             <icon icon="@day.Icon"></icon>
                         </div>
                         <div class="degree">@(Math.Round(day.Maxtemp))<sup>o</sup>C</div>
-                        <small>18<sup>o</sup></small>
+                        <small>@Math.Round(day.Mintemp) <sup>o</sup></small>
                     </div>
                     <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
-
+                    <span></span>
+                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(day.ProbabilityRain *100)) %</span>
                 </div>
             }
         </div>
@@ -92,29 +102,38 @@
     <table class="table table-dark">
         <thead>
             <tr>
-                <th scope="col">Clothes</th>
-                <th scope="col">Woman</th>
-                <th scope="col">Man</th>
+                <th scope="col">Одежда</th>
+                <th scope="col">Женская</th>
+                <th scope="col">Мужская</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>-----</td>
-                <td>-----</td>
-                <td>-----</td>
-
+                <td>Головной убор</td>
+                <td>@(Model?.ClothesWoman?.Head?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.Head?.Name ?? "-----") </td>
             </tr>
             <tr>
-                <td>-----</td>
-                <td>-----</td>
-                <td>-----</td>
+                <td>Верхняя одежда</td>
+                <td>@(Model?.ClothesWoman?.BodyTop?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.BodyTop?.Name ?? "-----") </td>
             </tr>
             <tr>
-                <td>-----</td>
-                <td>-----</td>
-                <td>-----</td>
+                <td>Нижняя одежда</td>
+                <td>@(Model?.ClothesWoman?.BodyBottom?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.BodyBottom?.Name ?? "-----") </td>
+            </tr>
+            <tr>
+                <td>Обувь</td>
+                <td>@(Model?.ClothesWoman?.Legs?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.Legs?.Name ?? "-----") </td>
+            </tr>
+            <tr>
+                <td>Другое</td>
+                <td>@(Model?.ClothesWoman?.Other?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.Other?.Name ?? "-----") </td>
             </tr>
         </tbody>
     </table>
- 
+
 </div>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Simbirsoft_Weather.Models.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,8 +11,9 @@ namespace Simbirsoft_Weather.Models
     public class RegistrationModel
     {
 
-        [EmailAddress(ErrorMessage = "Некорректный адрес")]
+      
         [Display(Name = "Ваш e-mail:")]
+        [EmailValidator(ErrorMessage = "Некорректный адрес")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Не указан пароль")]
@@ -25,13 +27,14 @@ namespace Simbirsoft_Weather.Models
 
         [Display(Name = "Ваше имя:")]
         [Required(ErrorMessage = "Не указано имя")]
+        [NameValidator(ErrorMessage = "Имя должно быть на кириллице или латинице без пробелов и цифр")]
         public string Name { get; set; }
 
         [Display(Name = "Город: ")]
         [Required(ErrorMessage = "Не указан регион")]
         public string Region { get; set; }
 
-       
+
         [Required(ErrorMessage = "Не указан пол")]
         public bool? Gender { get; set; } // false - woman, true - man 
     }

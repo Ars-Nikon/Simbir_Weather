@@ -110,28 +110,28 @@
         <tbody>
             <tr>
                 <td>Головной убор</td>
-                <td>@(Model?.ClothesWoman?.Head?.Name ?? "-----") </td>
-                <td>@(Model?.ClothesMan?.Head?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesWoman?.Head?.First().Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.Head?.First().Name ?? "-----") </td>
             </tr>
             <tr>
                 <td>Верхняя одежда</td>
-                <td>@(Model?.ClothesWoman?.BodyTop?.Name ?? "-----") </td>
-                <td>@(Model?.ClothesMan?.BodyTop?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesWoman?.BodyTop?.First().Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.BodyTop?.First().Name ?? "-----") </td>
             </tr>
             <tr>
                 <td>Нижняя одежда</td>
-                <td>@(Model?.ClothesWoman?.BodyBottom?.Name ?? "-----") </td>
-                <td>@(Model?.ClothesMan?.BodyBottom?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesWoman?.BodyBottom?.First().Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.BodyBottom?.First().Name ?? "-----") </td>
             </tr>
             <tr>
                 <td>Обувь</td>
-                <td>@(Model?.ClothesWoman?.Legs?.Name ?? "-----") </td>
-                <td>@(Model?.ClothesMan?.Legs?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesWoman?.Legs?.First().Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.Legs?.First().Name ?? "-----") </td>
             </tr>
             <tr>
                 <td>Другое</td>
-                <td>@(Model?.ClothesWoman?.Other?.Name ?? "-----") </td>
-                <td>@(Model?.ClothesMan?.Other?.Name ?? "-----") </td>
+                <td>@(Model?.ClothesWoman?.Other?.First().Name ?? "-----") </td>
+                <td>@(Model?.ClothesMan?.Other?.First().Name ?? "-----") </td>
             </tr>
         </tbody>
     </table>

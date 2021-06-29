@@ -6,6 +6,13 @@
         public double Maxtemp { get; set; }
         public double СhanceOfRain { get; set; }
 
+        public Forecast(double minTemp, double maxTemp, double chanceOfRain)
+        {
+            Mintemp = minTemp;
+            Maxtemp = maxTemp;
+            СhanceOfRain = chanceOfRain;
+        }
+
         public Forecast(WeatherApi.ForecastView forecast)
         {
             Mintemp = forecast.Mintemp;

@@ -1,5 +1,6 @@
 ﻿using Simbirsoft_Weather.Models;
 using Simbirsoft_Weather.Models.Enums;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Simbirsoft_Weather.Services
@@ -61,23 +62,19 @@ namespace Simbirsoft_Weather.Services
 
         private void DressPerson(Person person, ForWhom forWhom, Forecast forecast)
         {
-            var _clothes = _clothesRepository.GetClothes();
-            person.Head = _clothes.Where(c => c.ClothesType == ClothesType.Head)
-                .SingleOrDefault(c => IsGoodClothes(forecast, c) && (c.ForWhom & forWhom) > 0);
-            person.BodyTop = _clothes.Where(c => c.ClothesType == ClothesType.BodyTop)
-                .SingleOrDefault(c => IsGoodClothes(forecast, c) && (c.ForWhom & forWhom) > 0);
-            person.BodyBottom = _clothes.Where(c => c.ClothesType == ClothesType.BodyBottom)
-                .SingleOrDefault(c => IsGoodClothes(forecast, c) && (c.ForWhom & forWhom) > 0);
-            person.Legs = _clothes.Where(c => c.ClothesType == ClothesType.Legs)
-                .SingleOrDefault(c => IsGoodClothes(forecast, c) && (c.ForWhom & forWhom) > 0);
-            person.Other = _clothes.Where(c => c.ClothesType == ClothesType.Other)
-                .SingleOrDefault(c => IsGoodClothes(forecast, c) && (c.ForWhom & forWhom) > 0 && forecast.СhanceOfRain >= 0.5);
+            int count = 3;
 
-            person.Head = EmptyClothes(person.Head, ClothesType.Head);
-            person.BodyTop = EmptyClothes(person.BodyTop, ClothesType.BodyTop);
-            person.BodyBottom = EmptyClothes(person.BodyBottom, ClothesType.BodyBottom);
-            person.Legs = EmptyClothes(person.Legs, ClothesType.Legs);
-            person.Other = EmptyClothes(person.Other, ClothesType.Other);
+            person.Head = GetClothes(forecast, ClothesType.Head, forWhom, count);
+            person.BodyTop = GetClothes(forecast, ClothesType.BodyTop, forWhom, count);
+            person.BodyBottom = GetClothes(forecast, ClothesType.BodyBottom, forWhom, count);
+            person.Legs = GetClothes(forecast, ClothesType.Legs, forWhom, count);
+            person.Other = GetClothes(forecast, ClothesType.Other, forWhom, count);
+
+            EmptyClothes(person.Head, ClothesType.Head);
+            EmptyClothes(person.BodyTop, ClothesType.BodyTop);
+            EmptyClothes(person.BodyBottom, ClothesType.BodyBottom);
+            EmptyClothes(person.Legs, ClothesType.Legs);
+            EmptyClothes(person.Other, ClothesType.Other);
         }
 
         private bool IsGoodClothes(Forecast forecast, Clothes clothes)
@@ -86,10 +83,26 @@ namespace Simbirsoft_Weather.Services
             return clothes.MinTemperature <= averageTemperature && averageTemperature < clothes.MaxTemperature;  
         }
 
-        private Clothes EmptyClothes(Clothes clothes, ClothesType clothesType)
+        private void EmptyClothes(List<Clothes> clothes, ClothesType clothesType)
         {
             Clothes empty = new Clothes() { ClothesType = clothesType, Name = "-----" };
-            return clothes == null ? empty : clothes;
+            
+            if (clothes.Count == 0)
+            {
+                clothes.Add(empty);
+            }
+        }
+
+        private List<Clothes> GetClothes(Forecast forecast, ClothesType clothesType, ForWhom forWhom, int count)
+        {
+            var result = _clothesRepository.GetClothes()
+                .Where(c => c.ClothesType == clothesType && IsGoodClothes(forecast, c) && (c.ForWhom & forWhom) > 0);
+            
+            int countResult = result.Count();
+
+            if (countResult == 0) return new List<Clothes>(); 
+
+            return result.Take(countResult >= count ? count : countResult).ToList();
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using Simbirsoft_Weather.Models;
+﻿using System.IO;
+using Simbirsoft_Weather.Models;
 using Simbirsoft_Weather.Models.Enums;
-using System.IO;
 
 namespace Simbirsoft_Weather.Services
 {

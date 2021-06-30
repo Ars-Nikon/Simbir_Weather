@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Simbirsoft_Weather.Models;
+using Simbirsoft_Weather.Services;
 
 namespace Simbirsoft_Weather
 {
@@ -37,14 +38,27 @@ namespace Simbirsoft_Weather
             services.AddDbContext<EventContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
+            services.AddScoped<GetListCities>();
+
+            services.AddDbContext<ClothesContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+            services.AddScoped<IClothesRepository, ClothesRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IClothingConsultant, ClothingConsultant>();
+            services.Configure<SmtpClientConfiguration>(Configuration.GetSection("SmtpClientConfiguration"));
+            services.AddScoped<INotificationSender, MailNotificationSender>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddSingleton<INotificationWritter, NotificationWritter>();
+            services.AddSingleton<IRecPatternWritter, RecPatternWritter>();
+
             services.AddIdentity<User, IdentityRole>(opts =>
             {
                 opts.User.RequireUniqueEmail = true;
-                opts.Password.RequiredLength = 8;   // минимальная длина
-                opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
-                opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
-                opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
-                opts.Password.RequireDigit = false; // требуются ли цифры
+                opts.Password.RequiredLength = 8;   
+                opts.Password.RequireNonAlphanumeric = false;   
+                opts.Password.RequireLowercase = false; 
+                opts.Password.RequireUppercase = false; 
+                opts.Password.RequireDigit = false; 
             }).AddEntityFrameworkStores<IdentityContext>();
 
             services.AddControllersWithViews();
@@ -77,6 +91,7 @@ namespace Simbirsoft_Weather
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

@@ -7,21 +7,22 @@
 
     <form method="post" asp-controller="home" asp-action="Event">
         <div class="badge-danger" asp-validation-summary="All"></div>
+        <input type="hidden" asp-for="@(Model.Event.Id)" value="@(Model?.Event?.Id ?? 0)">
         <fieldset class="form-group">
             <div>
                 <label asp-for="Event.NameEvent"></label><br />
-                <input asp-for="Event.NameEvent" type="text" />
+                <input asp-for="Event.NameEvent" maxlength="50" type="text" />
             </div>
         </fieldset>
         <fieldset class="form-group">
             <div>
                 <label asp-for="Event.Description"></label><br />
-                <input asp-for="Event.Description" type="text" />
+                <input asp-for="Event.Description" maxlength="50" type="text" />
             </div>
         </fieldset>
         <fieldset class="form-group">
             <label asp-for="Event.Region"></label><br />
-            <input type="text" list="Region1" asp-for="Event.Region" value="@(Model.User?.Location ?? "null")" class="form-control" />
+            <input type="text" list="Region1" asp-for="Event.Region" maxlength="30" value="@(Model.User?.Location ?? "null")" class="form-control" />
             <datalist id="Region1">
                 @foreach (var item in ViewBag.Cities)
                 {

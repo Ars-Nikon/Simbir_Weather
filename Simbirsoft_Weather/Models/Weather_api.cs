@@ -145,7 +145,7 @@ namespace Simbirsoft_Weather.Models
                 ForecastView dayWheather = new ForecastView();
                 dayWheather.Date = Convert.ToDateTime(dates[0]).Date;
                 dayWheather.Mintemp = forecastData.Select(data => data.GeneralProperities.TempMin).Min();
-                dayWheather.Maxtemp = forecastData.Select(data => data.GeneralProperities.TempMin).Max();
+                dayWheather.Maxtemp = forecastData.Select(data => data.GeneralProperities.TempMax).Max();
                 dayWheather.Main = forecastData[0].WeatherDescriptions[0].Description;
                 dayWheather.Icon = forecastData[0].WeatherDescriptions[0].Icon;
                 dayWheather.ProbabilityRain = forecastData[0].ProbabilityRain;

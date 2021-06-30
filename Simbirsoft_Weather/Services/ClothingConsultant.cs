@@ -143,6 +143,11 @@ namespace Simbirsoft_Weather.Services
         {
             var result = _clothesRepository.GetClothes()
                 .Where(c => c.ClothesType == clothesType && IsGoodClothes(forecast, c) && (c.ForWhom & forWhom) > 0);
+
+            if (clothesType == ClothesType.Other)
+            {
+                result = result.Where(c => forecast.СhanceOfRain >= 0.5);
+            }
             
             int countResult = result.Count();
             if (countResult == 0)

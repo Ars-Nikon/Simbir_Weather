@@ -122,7 +122,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.Head)
                                 {
-                                    <li>@clothe.Name</li>
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
                         }
@@ -140,7 +140,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesMan.Head)
                                 {
-                                    <li>@clothe.Name</li>
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
                         }
@@ -161,7 +161,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.BodyTop)
                                 {
-                                    <li>@clothe.Name</li>
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
                         }
@@ -179,7 +179,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesMan.BodyTop)
                                 {
-                                    <li>@clothe.Name</li>
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
                         }
@@ -200,7 +200,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.BodyBottom)
                                 {
-                                    <li>@clothe.Name</li>
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
                         }
@@ -215,12 +215,12 @@
                         }
                         else
                         {
-                            <ul>
-                                @foreach (var clothe in Model.ClothesMan.BodyBottom)
-                                {
-                                    <li>@clothe.Name</li>
-                                }
-                            </ul>
+                    <ul>
+                        @foreach (var clothe in Model.ClothesMan.BodyBottom)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
                         }
                     }
                 </td>
@@ -236,12 +236,12 @@
                         }
                         else
                         {
-                            <ul>
-                                @foreach (var clothe in Model.ClothesWoman.Legs)
-                                {
-                                    <li>@clothe.Name</li>
-                                }
-                            </ul>
+                    <ul>
+                        @foreach (var clothe in Model.ClothesWoman.Legs)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
                         }
                     }
                 </td>
@@ -254,12 +254,12 @@
                         }
                         else
                         {
-                            <ul>
-                                @foreach (var clothe in Model.ClothesMan.Legs)
-                                {
-                                    <li>@clothe.Name</li>
-                                }
-                            </ul>
+                    <ul>
+                        @foreach (var clothe in Model.ClothesMan.Legs)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
                         }
                     }
                 </td>
@@ -275,12 +275,12 @@
                         }
                         else
                         {
-                            <ul>
-                                @foreach (var clothe in Model.ClothesWoman.Other)
-                                {
-                                    <li>@clothe.Name</li>
-                                }
-                            </ul>
+                    <ul>
+                        @foreach (var clothe in Model.ClothesWoman.Other)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
                         }
                     }
                 </td>
@@ -293,12 +293,12 @@
                         }
                         else
                         {
-                            <ul>
-                                @foreach (var clothe in Model.ClothesMan.Other)
-                                {
-                                    <li>@clothe.Name</li>
-                                }
-                            </ul>
+                    <ul>
+                        @foreach (var clothe in Model.ClothesMan.Other)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
                         }
                     }
                 </td>

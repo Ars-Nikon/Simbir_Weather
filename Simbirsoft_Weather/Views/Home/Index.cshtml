@@ -128,7 +128,24 @@
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.Head?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Head.Count == 1 && Model.ClothesMan.Head.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Head.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.Head)
+                                {
+                                    <li>@clothe.Name</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Верхняя одежда</td>
@@ -150,7 +167,24 @@
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.BodyTop?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.BodyTop.Count == 1 && Model.ClothesMan.BodyTop.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.BodyTop.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.BodyTop)
+                                {
+                                    <li>@clothe.Name</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Нижняя одежда</td>
@@ -172,7 +206,24 @@
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.BodyBottom?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.BodyBottom.Count == 1 && Model.ClothesMan.BodyBottom.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.BodyBottom.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.BodyBottom)
+                                {
+                                    <li>@clothe.Name</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Обувь</td>
@@ -194,7 +245,24 @@
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.Legs?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Legs.Count == 1 && Model.ClothesMan.Legs.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Legs.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.Legs)
+                                {
+                                    <li>@clothe.Name</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Другое</td>
@@ -216,7 +284,24 @@
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.Other?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Other.Count == 1 && Model.ClothesMan.Other.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Other.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.Other)
+                                {
+                                    <li>@clothe.Name</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
         </tbody>
     </table>

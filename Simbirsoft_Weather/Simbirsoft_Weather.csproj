@@ -17,6 +17,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Update="Resources\clothesRecPattern.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Resources\notificationForAll.html">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

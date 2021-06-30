@@ -1,5 +1,5 @@
-﻿using Simbirsoft_Weather.Models;
-using System;
+﻿using System;
+using Simbirsoft_Weather.Models;
 using System.Collections.Generic;
 
 namespace Simbirsoft_Weather.Services

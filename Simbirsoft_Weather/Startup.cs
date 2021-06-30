@@ -48,7 +48,7 @@ namespace Simbirsoft_Weather
             services.Configure<SmtpClientConfiguration>(Configuration.GetSection("SmtpClientConfiguration"));
             services.AddScoped<INotificationSender, MailNotificationSender>();
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<INotificationWritter, NotificationWritter>();
+            services.AddSingleton<INotificationWritter, NotificationWritter>();
             services.AddSingleton<IRecPatternWritter, RecPatternWritter>();
 
             services.AddIdentity<User, IdentityRole>(opts =>

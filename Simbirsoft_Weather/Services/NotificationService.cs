@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Simbirsoft_Weather.Models;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Simbirsoft_Weather.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Simbirsoft_Weather.Services
 {
@@ -13,7 +13,8 @@ namespace Simbirsoft_Weather.Services
         private readonly INotificationWritter _notificationWritter;
         private readonly IClothingConsultant _clothingConsultant;
 
-        public NotificationService(INotificationSender notificationSender,
+        public NotificationService(
+            INotificationSender notificationSender,
             IEventRepository eventRepository,
             UserManager<User> userManager,
             INotificationWritter notificationWritter,
@@ -26,6 +27,11 @@ namespace Simbirsoft_Weather.Services
             _clothingConsultant = clothingConsultant;
         }
 
+        /// <summary>
+        /// Collects information about the user, weather, clothing, event, generates a notification and sends it.
+        /// </summary>
+        /// <param name="notificationId">Unique event identifier.</param>
+        /// <returns></returns>
         public async Task EchoAsync(int notificationId)
         {
             var eventInfo = _eventRepository.GetEventById(notificationId);
@@ -39,12 +45,13 @@ namespace Simbirsoft_Weather.Services
             var recommendation = (bool)user.Gender ? _clothingConsultant.GetWomanRecommendation(forecast) : _clothingConsultant.GetManRecommendation(forecast);
             string title = eventInfo.NameEvent;
             string description = eventInfo.Description;
-
             string email = user.Email;
             string subject = "Weather";
             string message = (bool)user.Gender
-                ? _notificationWritter.WriteNotificationPageForWoman(forecast, forecastForTime, recommendation, title, description, user.Name)
-                : _notificationWritter.WriteNotificationPageForMan(forecast, forecastForTime, recommendation, title, description, user.Name);
+                ? _notificationWritter.WriteNotificationPageForWoman(
+                    forecast, forecastForTime, recommendation,title, description, user.Name)
+                : _notificationWritter.WriteNotificationPageForMan(
+                    forecast, forecastForTime, recommendation, title, description, user.Name);
 
             await _notificationSender.SendNotificationAsync(email, subject, message);
         }

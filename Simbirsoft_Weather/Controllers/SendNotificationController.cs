@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Simbirsoft_Weather.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Simbirsoft_Weather.Controllers
@@ -17,6 +14,11 @@ namespace Simbirsoft_Weather.Controllers
             _notificationService = notificationService;
         }
 
+        /// <summary>
+        /// Calls the method sending the notification.
+        /// </summary>
+        /// <param name="notificationId">Unique event identifier.</param>
+        /// <returns><see cref="OkResult"/> when the action is done.</returns>
         [HttpPost]
         public async Task<IActionResult> Post(int notificationId)
         {

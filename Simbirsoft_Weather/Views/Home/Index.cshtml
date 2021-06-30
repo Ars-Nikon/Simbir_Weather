@@ -122,13 +122,30 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.Head)
                                 {
-                                    <li>@clothe.Name</li>
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.Head?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Head.Count == 1 && Model.ClothesMan.Head.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Head.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.Head)
+                                {
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Верхняя одежда</td>
@@ -144,13 +161,30 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.BodyTop)
                                 {
-                                    <li>@clothe.Name</li>
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.BodyTop?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.BodyTop.Count == 1 && Model.ClothesMan.BodyTop.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.BodyTop.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.BodyTop)
+                                {
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Нижняя одежда</td>
@@ -166,13 +200,30 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.BodyBottom)
                                 {
-                                    <li>@clothe.Name</li>
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.BodyBottom?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.BodyBottom.Count == 1 && Model.ClothesMan.BodyBottom.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.BodyBottom.First().Name
+                        }
+                        else
+                        {
+                    <ul>
+                        @foreach (var clothe in Model.ClothesMan.BodyBottom)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Обувь</td>
@@ -185,16 +236,33 @@
                         }
                         else
                         {
-                            <ul>
-                                @foreach (var clothe in Model.ClothesWoman.Legs)
-                                {
-                                    <li>@clothe.Name</li>
-                                }
-                            </ul>
+                    <ul>
+                        @foreach (var clothe in Model.ClothesWoman.Legs)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.Legs?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Legs.Count == 1 && Model.ClothesMan.Legs.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Legs.First().Name
+                        }
+                        else
+                        {
+                    <ul>
+                        @foreach (var clothe in Model.ClothesMan.Legs)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Другое</td>
@@ -207,16 +275,33 @@
                         }
                         else
                         {
-                            <ul>
-                                @foreach (var clothe in Model.ClothesWoman.Other)
-                                {
-                                    <li>@clothe.Name</li>
-                                }
-                            </ul>
+                    <ul>
+                        @foreach (var clothe in Model.ClothesWoman.Other)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
                         }
                     }
                 </td>
-                <td>@(Model?.ClothesMan?.Other?.First().Name ?? "-----") </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Other.Count == 1 && Model.ClothesMan.Other.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Other.First().Name
+                        }
+                        else
+                        {
+                    <ul>
+                        @foreach (var clothe in Model.ClothesMan.Other)
+                        {
+                            <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                        }
+                    </ul>
+                        }
+                    }
+                </td>
             </tr>
         </tbody>
     </table>

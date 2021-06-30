@@ -24,8 +24,7 @@ namespace Simbirsoft_Weather.Controllers
         private readonly List<City> Cities;
         private readonly EventContext EventDb;
         private readonly IClothingConsultant ClothesGet;
-
-
+      
 
         public HomeController(UserManager<User> userManager, IClothingConsultant cloth, SignInManager<User> signInManager, ILogger<HomeController> logger, EventContext eventContext, GetListCities cities)
         {
@@ -35,6 +34,7 @@ namespace Simbirsoft_Weather.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+         
         }
 
         [Authorize]
@@ -318,6 +318,9 @@ namespace Simbirsoft_Weather.Controllers
                 SendModel.ClothesMan = clothes.Man;
                 SendModel.ClothesWoman = clothes.Woman;
             }
+
+           
+
             return View(SendModel);
         }
 

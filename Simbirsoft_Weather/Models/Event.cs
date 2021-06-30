@@ -10,8 +10,8 @@ namespace Simbirsoft_Weather.Models
     [Table("Events")]
     public class Event
     {
-        [Key]
-        public int Id { get; set; }
+
+        public int? Id { get; set; }
 
         [Required(ErrorMessage = "Название мероприятия не может быть пустым")]
         [Display(Name = "Название мероприятия")]
@@ -20,6 +20,8 @@ namespace Simbirsoft_Weather.Models
         public string Id_User { get; set; }
         public bool Done { get; set; }
 
+        public bool CancellationStatus { get; set; }
+
         [Display(Name = "Описание мероприятия")]
         public string Description { get; set; }
 
@@ -27,11 +29,11 @@ namespace Simbirsoft_Weather.Models
         [Display(Name = "Город")]
         public string Region { get; set; }
 
-        [Required(ErrorMessage ="Дата прогноза не может быть пустым")]
+        [Required(ErrorMessage = "Дата прогноза не может быть пустым")]
         [Display(Name = "Дата прогноза")]
         public DateTime? DateEvent { get; set; }
 
-        [Required(ErrorMessage ="Дата отправи не может быть пустым")]
+        [Required(ErrorMessage = "Дата отправи не может быть пустым")]
         [Display(Name = "Дата и время отправки уведомления")]
         public DateTime? DateSendMessage { get; set; }
     }

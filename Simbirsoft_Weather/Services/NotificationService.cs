@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Simbirsoft_Weather.Models;
-using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Simbirsoft_Weather.Services
@@ -34,8 +34,7 @@ namespace Simbirsoft_Weather.Services
             if (user == null) return;
 
             WeatherApi api = new WeatherApi(eventInfo.Region);
-            int days = (eventInfo.DateEvent - DateTime.Now).Value.Days + 1;
-            var forecast = api.WheatherFor5Day()[days];
+            var forecast = api.WheatherFor5Day().SingleOrDefault(f => f.Date.Day == eventInfo.DateEvent.Value.Day);
             var forecastForTime = api.WheatherForTime(forecast.Date.ToString());
             var recommendation = (bool)user.Gender ? _clothingConsultant.GetWomanRecommendation(forecast) : _clothingConsultant.GetManRecommendation(forecast);
             string title = eventInfo.NameEvent;
@@ -48,8 +47,6 @@ namespace Simbirsoft_Weather.Services
                 : _notificationWritter.WriteNotificationPageForMan(forecast, forecastForTime, recommendation, title, description, user.Name);
 
             await _notificationSender.SendNotificationAsync(email, subject, message);
-
-            _eventRepository.DeleteEventById(notificationId);
         }
     }
 }

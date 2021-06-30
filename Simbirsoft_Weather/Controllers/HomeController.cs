@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -36,41 +37,165 @@ namespace Simbirsoft_Weather.Controllers
             _logger = logger;
         }
 
-
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Event()
+        public async Task<IActionResult> EventList(EventListModel model)
         {
-            if (User.Identity.IsAuthenticated && _userManager.FindByNameAsync(User.Identity.Name).Result == null)
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index");
+            }
+            var SendModel = new EventListModel();
+            SendModel.ErrorMessege = model?.ErrorMessege ?? null;
+
+            SendModel.Events = EventDb.Events.Where(x => x.Id_User == user.Id).OrderByDescending(x => x.Id).ToList();
+
+            return View(SendModel);
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditEvent(int Id)
+        {
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
             {
                 await _signInManager.SignOutAsync();
                 return RedirectToAction("Index");
             }
 
+            var Event = EventDb.Events.FirstOrDefault(x => x.Id == Id && x.Id_User == user.Id);
+            var SendModel = new EventListModel();
+
+            if (Event == null)
+            {
+                SendModel.ErrorMessege = "Нужное событие не найдено";
+                return RedirectToAction("EventList", SendModel);
+            }
+            if (Event.CancellationStatus || Event.Done)
+            {
+                SendModel.ErrorMessege = "Нужное событие не найдено";
+                return RedirectToAction("EventList", SendModel);
+            }
+
+            return RedirectToAction("Event", new { Id });
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CancellationEvent(int Id)
+        {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index");
+            }
+
+            var Event = EventDb.Events.FirstOrDefault(x => x.Id == Id && x.Id_User == user.Id);
+            var SendModel = new EventListModel();
+
+            if (Event == null)
+            {
+                SendModel.ErrorMessege = "Нужное событие не найдено";
+                return RedirectToAction("EventList", SendModel);
+            }
+            if (Event.CancellationStatus || Event.Done)
+            {
+                SendModel.ErrorMessege = "Нужное событие не найдено";
+                return RedirectToAction("EventList", SendModel);
+            }
+
+            Event.Done = true;
+            Event.CancellationStatus = true;
+
+            EventDb.Events.Update(Event);
+            EventDb.SaveChanges();
+
+            SendModel.ErrorMessege = "Событие Отменено";
+            return RedirectToAction("EventList", SendModel);
+        }
 
 
-            var ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Event(int? id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index");
+            }
+
+
+            var sendModel = new EventModel();
+
+            if (id != null)
+            {
+                sendModel.Event = EventDb.Events.FirstOrDefault(x => x.Id == id && x.Id_User == user.Id);
+                if (sendModel.Event == null)
+                {
+                    sendModel.Event = null;
+                }
+                else
+                {
+                    if (sendModel.Event.CancellationStatus || sendModel.Event.Done)
+                    {
+                        sendModel.Event = null;
+                    }
+                }
+            }
+
+            sendModel.User = user;
+
 
             ViewBag.Cities = Cities;
-            return View(new EventModel() { User = user });
+
+
+            return View(sendModel);
         }
+
+
+
+
 
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Event(EventModel eventModel)
         {
+            Event Event = null;
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            if (User.Identity.IsAuthenticated && _userManager.FindByNameAsync(User.Identity.Name).Result == null)
+            if (User.Identity.IsAuthenticated && user == null)
             {
                 await _signInManager.SignOutAsync();
                 return RedirectToAction("Index");
             }
-            if (Cities.FirstOrDefault(x => x.City_Ru.ToLower() == eventModel.Event.Region.Trim().ToLower()) == null)
+            if (eventModel.Event.Id != 0)
             {
-                ModelState.AddModelError("Event.Region", "Город не найдет");
+                Event = EventDb.Events.AsNoTracking<Event>().FirstOrDefault(x => x.Id == eventModel.Event.Id && x.Id_User == user.Id);
+                if (Event != null)
+                {
+                    if (Event.CancellationStatus || Event.Done)
+                    {
+                        return RedirectToAction("Event");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Event");
+                }
             }
-            if (eventModel.Event.DateSendMessage > eventModel.Event.DateEvent)
+            if (Cities.FirstOrDefault(x => x.City_Ru.Trim().ToLower() == eventModel.Event.Region.Trim().ToLower()) == null)
+            {
+                ModelState.AddModelError("Event.Region", "Город не найден");
+            }
+            if (eventModel.Event.DateSendMessage.Value.Date > eventModel.Event.DateEvent.Value.Date)
             {
                 ModelState.AddModelError("Event.DateEvent", "Дата прогноза не может быть позже даты отправки уведомления");
             }
@@ -88,9 +213,22 @@ namespace Simbirsoft_Weather.Controllers
             }
             if (ModelState.IsValid)
             {
-
+                eventModel.Event.CancellationStatus = false;
                 eventModel.Event.Id_User = user.Id;
-                EventDb.Add(eventModel.Event);
+                if (Event != null)
+                {
+                    Event.NameEvent = eventModel.Event.NameEvent;
+                    Event.Region = eventModel.Event.Region;
+                    Event.DateSendMessage = eventModel.Event.DateSendMessage;
+                    Event.Description = eventModel.Event.Description;
+                    Event.DateEvent = eventModel.Event.DateEvent;
+                    EventDb.Update(Event);
+                }
+                else
+                {
+                    eventModel.Event.Id = null;
+                    EventDb.Add(eventModel.Event);
+                }
                 EventDb.SaveChanges();
             }
             else

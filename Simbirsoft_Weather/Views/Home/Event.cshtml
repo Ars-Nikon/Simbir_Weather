@@ -7,6 +7,7 @@
 
     <form method="post" asp-controller="home" asp-action="Event">
         <div class="badge-danger" asp-validation-summary="All"></div>
+        <input type="hidden" asp-for="@(Model.Event.Id)" value="@(Model?.Event?.Id ?? 0)">
         <fieldset class="form-group">
             <div>
                 <label asp-for="Event.NameEvent"></label><br />

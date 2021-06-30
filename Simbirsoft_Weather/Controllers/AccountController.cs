@@ -30,6 +30,7 @@ namespace Simbirsoft_Weather.Controllers
         [HttpGet]
         public IActionResult Registration()
         {
+         
             ViewBag.Cities = Cities.ToList();
 
             return View();
@@ -94,9 +95,14 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditGender(LoginViewModel loginViewModel)
         {
-
-
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index","Home");
+            }
+
+            
 
             var model = loginViewModel.EditModel;
             if (model.Gender == null)
@@ -117,8 +123,14 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditRegion(LoginViewModel loginViewModel)
         {
-
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+
+           
             var model = loginViewModel.EditModel;
             if (model.Region == null)
             {
@@ -148,8 +160,14 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditName(LoginViewModel loginViewModel)
         {
-
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+
+           
             var model = loginViewModel.EditModel;
             if (model.Name == null)
             {
@@ -183,6 +201,12 @@ namespace Simbirsoft_Weather.Controllers
         public async Task<IActionResult> EditPassword(LoginViewModel loginViewModel)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+
             var model = loginViewModel.EditPassword;
 
 
@@ -246,8 +270,15 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditEmail(LoginViewModel model)
         {
-            string pattern = "[.\\-_a-z0-9]+@([a-z0-9][\\-a-z0-9]+\\.)+[a-z]{2,6}";
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+
+            string pattern = "[.\\-_a-z0-9]+@([a-z0-9][\\-a-z0-9]+\\.)+[a-z]{2,6}";
+            
             if (model.EditModel.Password == null)
             {
                 ModelState.AddModelError("EditModel.Password", "Не правильный пароль");
@@ -309,6 +340,7 @@ namespace Simbirsoft_Weather.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+
             var model = loginViewModel.LoginModel;
             if (ModelState.IsValid)
             {

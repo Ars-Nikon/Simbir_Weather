@@ -16,7 +16,7 @@ namespace Simbirsoft_Weather.Services
 
         public Event GetEventById(int id)
         {
-            return _db.Events.FirstOrDefault(e => e.Id == id);
+            return _db.Events.SingleOrDefault(e => e.Id == id);
         }
 
         public void AddEvent(Event @event)

@@ -45,7 +45,7 @@ namespace TimerWorker
 
                         foreach (var t in db.Events)
                         {
-                            if (DateTime.Now > t.DateSendMessage && !t.Done)
+                            if (DateTime.UtcNow.AddHours(3) > t.DateSendMessage && !t.Done)
                             {
                                 var result = SendReadyNotificationIdToServer(t.Id);
 

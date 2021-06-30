@@ -115,7 +115,7 @@ namespace Simbirsoft_Weather.Controllers
 
             if (indexModel.Region != null && Cities.FirstOrDefault(x => x.City_Ru.ToLower() == indexModel.Region.Trim().ToLower()) != null)
             {
-                weather = new WeatherApi(indexModel.Region);
+                weather = new WeatherApi(indexModel.Region.Trim());
                 ViewBag.Cities = Cities;
             }
             else

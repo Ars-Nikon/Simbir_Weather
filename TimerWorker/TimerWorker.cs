@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
+using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace TimerWorker
 {
@@ -15,6 +15,7 @@ namespace TimerWorker
         private readonly int _interval;
         private readonly int _maxDegreeOfParallelism;
         private readonly string _notificationServerHost;
+        private const string CONSOLE_SEPARATOR = "-------------------------";
 
         public TimerWorker(string configureFilePath)
         {
@@ -35,14 +36,13 @@ namespace TimerWorker
                 {
                     Task.Delay(_interval).Wait();
 
-                    ParallelOptions parallelOptions = new ParallelOptions()
-                    {
-                        MaxDegreeOfParallelism = _maxDegreeOfParallelism
-                    };
-
                     using (EventContext db = new EventContext(_dbOptions))
                     {
-                        Console.WriteLine(db.Events.Count());
+                        int countSent = db.Events.Where(e => e.Done).Count();
+                        int countQueue = db.Events.Count() - countSent;
+
+                        Console.WriteLine($"Sent: {countSent}\nQueue: {countQueue}");
+
                         foreach (var t in db.Events)
                         {
                             if (DateTime.Now > t.DateSendMessage && !t.Done)
@@ -52,30 +52,21 @@ namespace TimerWorker
                                 if (result == HttpStatusCode.OK)
                                 {
                                     t.Done = true;
-                                    db.SaveChanges();
                                     Console.WriteLine($"Send {t.Id}");
                                 }
                             }
                         }
-                        //Parallel.ForEach(db., parallelOptions, t =>
-                        //{
-                        //    if (DateTime.Now > t.DateTime && !t.IsDone)
-                        //    {
-                        //        var result = SendReadyNotificationIdToServer(t.id);
 
-                        //        if (result == HttpStatusCode.OK)
-                        //        {
-                        //            t.IsDone = true;
-                        //        }
-                        //    }
-                        //});
+                        db.SaveChanges();
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    string exeptionInfo = string.Format(
+                        "{0}\n{1}\n{2}\n{3}\n{4}\n{5}",
+                        CONSOLE_SEPARATOR, ex.Message, ex.Data, ex.Source, ex.StackTrace, CONSOLE_SEPARATOR);
+                    Console.WriteLine(exeptionInfo);
                 }
-
             }
         }
 

@@ -10,9 +10,11 @@ namespace Simbirsoft_Weather.Services
     public class NotificationWritter : INotificationWritter
     {
         private readonly Dictionary<ClothesType, string> clothesName;
+        private readonly IRecPatternWritter _recPatternWritter;
 
-        public NotificationWritter()
+        public NotificationWritter(IRecPatternWritter recPatternWritter)
         {
+            _recPatternWritter = recPatternWritter;
             clothesName = new Dictionary<ClothesType, string>();
             clothesName.Add(ClothesType.Head, "Головной убор");
             clothesName.Add(ClothesType.BodyTop, "Верхняя одежда");
@@ -94,15 +96,15 @@ namespace Simbirsoft_Weather.Services
                 weatherForTime[weatherForTime.Keys.Skip(1).Take(4).First()].WeatherDescriptions[0].Description,
                 "Мужчина",
                 clothesName[ClothesType.Head],
-                string.Join(", ", man.Head.Select(c => c.Name)),
+                string.Join("/", man.Head.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Man))),
                 clothesName[ClothesType.BodyTop],
-                string.Join(", ", man.BodyTop.Select(c => c.Name)),
+                string.Join("/", man.BodyTop.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Man))),
                 clothesName[ClothesType.BodyBottom],
-                string.Join(", ", man.BodyBottom.Select(c => c.Name)),
+                string.Join("/", man.BodyBottom.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Man))),
                 clothesName[ClothesType.Legs],
-                string.Join(", ", man.Legs.Select(c => c.Name)),
+                string.Join("/", man.Legs.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Man))),
                 clothesName[ClothesType.Other],
-                string.Join(", ", man.Other.Select(c => c.Name)),
+                string.Join("/", man.Other.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Man))),
                 userName,
                 forecast.ProbabilityRain
                 );
@@ -137,15 +139,15 @@ namespace Simbirsoft_Weather.Services
                 weatherForTime[weatherForTime.Keys.Skip(1).Take(4).First()].WeatherDescriptions[0].Description,
                 "Женщина",
                 clothesName[ClothesType.Head],
-                string.Join(", ", woman.Head.Select(c => c.Name)),
+                string.Join("/", woman.Head.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Woman))),
                 clothesName[ClothesType.BodyTop],
-                string.Join(", ", woman.BodyTop.Select(c => c.Name)),
+                string.Join("/", woman.BodyTop.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Woman))),
                 clothesName[ClothesType.BodyBottom],
-                string.Join(", ", woman.BodyBottom.Select(c => c.Name)),
+                string.Join("/", woman.BodyBottom.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Woman))),
                 clothesName[ClothesType.Legs],
-                string.Join(", ", woman.Legs.Select(c => c.Name)),
+                string.Join("/", woman.Legs.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Woman))),
                 clothesName[ClothesType.Other],
-                string.Join(", ", woman.Other.Select(c => c.Name)),
+                string.Join("/", woman.Other.Select(c => _recPatternWritter.WriteRec(c, Models.Enums.ForWhom.Woman))),
                 userName,
                 forecast.ProbabilityRain * 100
                 );

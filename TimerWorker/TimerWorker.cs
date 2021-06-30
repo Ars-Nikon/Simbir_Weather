@@ -35,10 +35,10 @@ namespace TimerWorker
                 {
                     Task.Delay(_interval).Wait();
 
-                    //ParallelOptions parallelOptions = new ParallelOptions()
-                    //{
-                    //    MaxDegreeOfParallelism = _maxDegreeOfParallelism
-                    //};
+                    ParallelOptions parallelOptions = new ParallelOptions()
+                    {
+                        MaxDegreeOfParallelism = _maxDegreeOfParallelism
+                    };
 
                     using (EventContext db = new EventContext(_dbOptions))
                     {

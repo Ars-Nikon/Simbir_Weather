@@ -42,7 +42,7 @@ namespace Simbirsoft_Weather.Services
             WeatherApi api = new WeatherApi(eventInfo.Region);
             var forecast = api.WheatherFor5Day().SingleOrDefault(f => f.Date.Day == eventInfo.DateEvent.Value.Day);
             var forecastForTime = api.WheatherForTime(forecast.Date.ToString());
-            var recommendation = (bool)user.Gender ? _clothingConsultant.GetWomanRecommendation(forecast) : _clothingConsultant.GetManRecommendation(forecast);
+            var recommendation = !(bool)user.Gender ? _clothingConsultant.GetWomanRecommendation(forecast) : _clothingConsultant.GetManRecommendation(forecast);
             string title = eventInfo.NameEvent;
             string description = eventInfo.Description;
             string email = user.Email;

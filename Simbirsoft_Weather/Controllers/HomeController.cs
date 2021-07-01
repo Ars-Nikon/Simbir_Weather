@@ -305,7 +305,7 @@ namespace Simbirsoft_Weather.Controllers
             {
                 if (user.Gender.Value)
                 {
-                    SendModel.ClothesMan = ClothesGet.GetManRecommendation(SendModel.Weathers[0]);
+                    SendModel.ClothesMan = ClothesGet.GetManRecommendation(SendModel.Weathers[0]);             
                 }
                 else
                 {

@@ -55,7 +55,6 @@ namespace Simbirsoft_Weather.Controllers
             return View(SendModel);
         }
 
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> EditEvent(int Id)
@@ -84,7 +83,6 @@ namespace Simbirsoft_Weather.Controllers
 
             return RedirectToAction("Event", new { Id });
         }
-
 
         [Authorize]
         [HttpPost]
@@ -120,7 +118,6 @@ namespace Simbirsoft_Weather.Controllers
             SendModel.ErrorMessege = "Событие Отменено";
             return RedirectToAction("EventList", SendModel);
         }
-
 
         [Authorize]
         [HttpGet]
@@ -160,10 +157,6 @@ namespace Simbirsoft_Weather.Controllers
 
             return View(sendModel);
         }
-
-
-
-
 
         [Authorize]
         [HttpPost]
@@ -240,8 +233,7 @@ namespace Simbirsoft_Weather.Controllers
             return RedirectToAction("Index", new IndexModel { Result = "Событие Запланировано" });
         }
 
-
-
+        [HttpGet]
         public async Task<IActionResult> Index(IndexModel indexModel)
         {
             var SendModel = new IndexModel();

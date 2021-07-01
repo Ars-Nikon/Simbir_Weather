@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ru" style="height: 100%;">
 
 <head>
     <meta charset="UTF-8">
@@ -24,56 +24,62 @@
 </head>
 
 
-<body>
-    <div class="site-content">
-        <div class="site-header">
-            <div class="container">
-                <a asp-action="index" asp-controller="Home" class="branding">
-                    <img src="~/WeatherFront/images/logo.png" alt="" class="logo">
-                    <div class="logo-type">
-                        <h1 class="site-title">ПогодоГотовность</h1>
-                        <small class="site-description">Simbirsoft</small>
-                    </div>
-                </a>
-                <!-- Default snippet for navigation -->
-                <div class="main-navigation">
-                    <ul class="menu">
-                        <li class="menu-item current-menu-item">
-                            <a asp-action="index" asp-controller="Home"><i class="fa fa-sun-o"></i>  Погода</a>
-                        </li>
-                        <li class="menu-item">
-                            <a asp-action="Event" asp-controller="Home"><i class="fa fa-calendar"></i>  Запланировать событие</a>
-                        </li>
-                        <li class="menu-item">
-                            <a asp-action="EventList" asp-controller="Home"><i class="fa fa-list"></i>  Мои события</a>
-                        </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="menu-item">
-                                <a asp-action="Login" asp-controller="Account"><i class="fa fa-user-circle"></i> @await Component.InvokeAsync("UserIdentityName", User.Identity.Name)</a>
+<body style="height: 100%;">
+    <div style="
+        position: relative;
+        min-height: 100%;
+        background: #1e202b;
+        padding-bottom: 20px
+" class="site-content">
+        <div style="padding-bottom: 90px;" class="site-content">
+            <div class="site-header">
+                <div class="container">
+                    <a asp-action="index" asp-controller="Home" class="branding">
+                        <img src="~/WeatherFront/images/logo.png" alt="" class="logo">
+                        <div class="logo-type">
+                            <h1 class="site-title">ПогодоГотовность</h1>
+                            <small class="site-description">Simbirsoft</small>
+                        </div>
+                    </a>
+                    <!-- Default snippet for navigation -->
+                    <div class="main-navigation">
+                        <ul class="menu">
+                            <li class="menu-item current-menu-item">
+                                <a asp-action="index" asp-controller="Home"><i class="fa fa-sun-o"></i>  Погода</a>
                             </li>
-                        }
-                        else
-                        {
                             <li class="menu-item">
-                                <a asp-action="Login" asp-controller="Account"><i class="fa fa-user-secret"></i> Вход</a>
+                                <a asp-action="Event" asp-controller="Home"><i class="fa fa-calendar"></i>  Запланировать событие</a>
                             </li>
-                        }
+                            <li class="menu-item">
+                                <a asp-action="EventList" asp-controller="Home"><i class="fa fa-list"></i>  Мои события</a>
+                            </li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="menu-item">
+                                    <a asp-action="Login" asp-controller="Account"><i class="fa fa-user-circle"></i> @await Component.InvokeAsync("UserIdentityName", User.Identity.Name)</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="menu-item">
+                                    <a asp-action="Login" asp-controller="Account"><i class="fa fa-user-secret"></i> Вход</a>
+                                </li>
+                            }
 
-                    </ul> <!-- .menu -->
-                </div> <!-- .main-navigation -->
-            </div>
-        </div> <!-- .site-header -->
+                        </ul> <!-- .menu -->
+                    </div> <!-- .main-navigation -->
+                </div>
+            </div> <!-- .site-header -->
 
 
-        @RenderBody()
+            @RenderBody()
+        </div>
+
+
+        <footer style="text-align:center; position: absolute;left: 0;bottom: 0;width: 100%;height: 80px;" class="site-footer">
+            <p style="margin: 0 auto 0 auto; width:300px" class="colophon">Летний Интенсив 2021. Группа: kb1_dotnet</p>
+        </footer> <!-- .site-footer -->
     </div>
-
-
-    <footer class="site-footer">
-        <p class="colophon">Летний Интенсив 2021 группа: kb1_dotnet </p>
-    </footer> <!-- .site-footer -->
-
 
 
 

@@ -42,7 +42,7 @@
                             <icon icon="@Model.Weathers[0].Icon"></icon>
                         </div>
                     </div>
-                    <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)Model.Weathers[0].SpeedWind) м/с</span>
+                    <span style="padding: 0 initial 0 initial"><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)Model.Weathers[0].SpeedWind) м/с</span>
                     <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(Model.Weathers[0].ProbabilityRain *100)) %</span>
                     <br />
                     <h2>@Model.Weathers[0].Main</h2>
@@ -64,9 +64,11 @@
                         <div class="degree">@(Math.Round(day.Maxtemp))<sup>o</sup>C</div>
                         <small>@Math.Round(day.Mintemp) <sup>o</sup></small>
                     </div>
-                    <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
-                    <span></span>
-                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(day.ProbabilityRain *100)) %</span>
+                    <div style="text-align: center;">
+                        <span style="padding: 0 5px 0 5px;"><img style="margin-right: 5px;" src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
+                        <span></span>
+                        <span style="padding: 0 5px 0 5px"><img style="margin-right: 5px;" src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(day.ProbabilityRain *100)) %</span>
+                    </div>
                 </div>
             }
         </div>

@@ -46,7 +46,7 @@ namespace Simbirsoft_Weather.Services
             string title = eventInfo.NameEvent;
             string description = eventInfo.Description;
             string email = user.Email;
-            string subject = "Weather";
+            string subject = "Weather readiness";
             string message = !(bool)user.Gender
                 ? _notificationWritter.WriteNotificationPageForWoman(
                     forecast, forecastForTime, recommendation, title, description, user.Name)

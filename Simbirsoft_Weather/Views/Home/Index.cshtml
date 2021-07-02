@@ -64,9 +64,11 @@
                         <div class="degree">@(Math.Round(day.Maxtemp))<sup>o</sup>C</div>
                         <small>@Math.Round(day.Mintemp) <sup>o</sup></small>
                     </div>
-                    <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
-                    <span></span>
-                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(day.ProbabilityRain *100)) %</span>
+                    <div style="text-align:center">
+                        <span><img style="padding:0 5px 0 5px" src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
+                        <span></span>
+                        <span><img style="padding:0 5px 0 5px" src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(day.ProbabilityRain *100)) %</span>
+                    </div>
                 </div>
             }
         </div>
@@ -122,6 +124,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.Head)
                                 {
+                                    clothe.ForWhom = ForWhom.Woman;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -140,6 +143,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesMan.Head)
                                 {
+                                    clothe.ForWhom = ForWhom.Man;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -161,6 +165,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.BodyTop)
                                 {
+                                    clothe.ForWhom = ForWhom.Woman;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -179,6 +184,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesMan.BodyTop)
                                 {
+                                    clothe.ForWhom = ForWhom.Man;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -200,6 +206,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.BodyBottom)
                                 {
+                                    clothe.ForWhom = ForWhom.Woman;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -218,6 +225,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesMan.BodyBottom)
                                 {
+                                    clothe.ForWhom = ForWhom.Man;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -239,6 +247,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.Legs)
                                 {
+                                    clothe.ForWhom = ForWhom.Woman;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -257,6 +266,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesMan.Legs)
                                 {
+                                    clothe.ForWhom = ForWhom.Man;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -278,6 +288,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesWoman.Other)
                                 {
+                                    clothe.ForWhom = ForWhom.Woman;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>
@@ -296,6 +307,7 @@
                             <ul>
                                 @foreach (var clothe in Model.ClothesMan.Other)
                                 {
+                                    clothe.ForWhom = ForWhom.Man;
                                     <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
                                 }
                             </ul>

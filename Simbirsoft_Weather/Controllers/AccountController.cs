@@ -6,6 +6,7 @@ using Simbirsoft_Weather.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Simbirsoft_Weather.Controllers
@@ -15,11 +16,11 @@ namespace Simbirsoft_Weather.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<HomeController> _logger;
-        private readonly CityContext Citydb;
+        private readonly List<City> Cities;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<HomeController> logger, CityContext cityContext)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<HomeController> logger, GetListCities cities)
         {
-            Citydb = cityContext;
+            Cities = cities.Cities();
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
@@ -29,7 +30,8 @@ namespace Simbirsoft_Weather.Controllers
         [HttpGet]
         public IActionResult Registration()
         {
-            ViewBag.Cities = Citydb.Cities.ToList();
+         
+            ViewBag.Cities = Cities.ToList();
 
             return View();
         }
@@ -39,9 +41,13 @@ namespace Simbirsoft_Weather.Controllers
         public async Task<IActionResult> Registration(RegistrationModel model)
         {
 
-            if (Citydb.Cities.FirstOrDefault(x => x.City_Ru.ToLower() == model.Region.Trim().ToLower()) == null)
+            if (Cities.FirstOrDefault(x => x.City_Ru.ToLower() == model.Region.Trim().ToLower()) == null)
             {
                 ModelState.AddModelError("Город", "Город не найдет");
+            }
+            if (model.Email == null)
+            {
+                ModelState.AddModelError("Email", "Почта не указана");
             }
             if (model.Email != null)
             {
@@ -68,7 +74,7 @@ namespace Simbirsoft_Weather.Controllers
                     }
                 }
             }
-            ViewBag.Cities = Citydb.Cities.ToList();
+            ViewBag.Cities = Cities.ToList();
             return View(model);
         }
 
@@ -77,7 +83,7 @@ namespace Simbirsoft_Weather.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                ViewBag.Cities = Citydb.Cities.ToList();
+                ViewBag.Cities = Cities.ToList();
                 var user = await _userManager.FindByNameAsync(User.Identity.Name);
                 return View(new LoginViewModel { EditModel = new EditModel { Result = edit?.Result ?? null, Email = user.Email, Gender = user.Gender, Name = user.Name, Region = user.Location }, ReturnUrl = returnUrl });
             }
@@ -89,18 +95,20 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditGender(LoginViewModel loginViewModel)
         {
-            if (!User.Identity.IsAuthenticated)
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
             {
-                return RedirectToAction("Index", "Home");
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index","Home");
             }
 
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            
 
             var model = loginViewModel.EditModel;
             if (model.Gender == null)
             {
                 ModelState.AddModelError("Пол", "Выберите Пол");
-                ViewBag.Cities = Citydb.Cities.ToList();
+                ViewBag.Cities = Cities.ToList();
                 loginViewModel.EditModel.AddUser(user);
                 return View("login", loginViewModel);
             }
@@ -115,25 +123,28 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditRegion(LoginViewModel loginViewModel)
         {
-            if (!User.Identity.IsAuthenticated)
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
             {
+                await _signInManager.SignOutAsync();
                 return RedirectToAction("Index", "Home");
             }
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+           
             var model = loginViewModel.EditModel;
             if (model.Region == null)
             {
                 ModelState.AddModelError("EditModel.Region", "Введите Город");
-                ViewBag.Cities = Citydb.Cities.ToList();
+                ViewBag.Cities = Cities.ToList();
                 loginViewModel.EditModel.AddUser(user);
                 return View("login", loginViewModel);
             }
             else
             {
-                if (Citydb.Cities.FirstOrDefault(x => x.City_Ru.ToLower() == model.Region.Trim().ToLower()) == null)
+                if (Cities.FirstOrDefault(x => x.City_Ru.ToLower() == model.Region.Trim().ToLower()) == null)
                 {
                     ModelState.AddModelError("EditModel.Region", "Город не найдет");
-                    ViewBag.Cities = Citydb.Cities.ToList();
+                    ViewBag.Cities = Cities.ToList();
                     loginViewModel.EditModel.AddUser(user);
                     return View("login", loginViewModel);
                 }
@@ -149,25 +160,39 @@ namespace Simbirsoft_Weather.Controllers
         [Authorize]
         public async Task<IActionResult> EditName(LoginViewModel loginViewModel)
         {
-            if (!User.Identity.IsAuthenticated)
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
             {
+                await _signInManager.SignOutAsync();
                 return RedirectToAction("Index", "Home");
             }
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+           
             var model = loginViewModel.EditModel;
             if (model.Name == null)
             {
                 ModelState.AddModelError("EditModel.Name", "Введите имя");
-                ViewBag.Cities = Citydb.Cities.ToList();
-                loginViewModel.EditModel.AddUser(user);
-                return View("login", loginViewModel);
+            }
+            string patternValid = @"\s|\d|\W";
+            if (model.Name != null && Regex.IsMatch(model.Name, patternValid, RegexOptions.IgnoreCase))
+            {
+                ModelState.AddModelError("EditModel.Name", "Имя должно быть на кириллице или латинице без пробелов и цифр");
             }
 
 
-            user.Name = model.Name;
-            await _userManager.UpdateAsync(user);
-            model.Result = "Имя изменено";
-            return RedirectToAction("Login", model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Cities = Cities.ToList();
+                loginViewModel.EditModel.AddUser(user);
+                return View("login", loginViewModel);
+            }
+            else
+            {
+                user.Name = model.Name;
+                await _userManager.UpdateAsync(user);
+                model.Result = "Имя изменено";
+                return RedirectToAction("Login", model);
+            }
         }
 
         [HttpPost]
@@ -176,12 +201,15 @@ namespace Simbirsoft_Weather.Controllers
         public async Task<IActionResult> EditPassword(LoginViewModel loginViewModel)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var model = loginViewModel.EditPassword;
-
-            if (!User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated && user == null)
             {
+                await _signInManager.SignOutAsync();
                 return RedirectToAction("Index", "Home");
             }
+
+            var model = loginViewModel.EditPassword;
+
+
 
             if (model.Password != null)
             {
@@ -199,7 +227,13 @@ namespace Simbirsoft_Weather.Controllers
             {
                 ModelState.AddModelError("EditPassword.NewPassword", "Введите Пароль");
             }
-
+            else
+            {
+                if (model.NewPassword.Length<8)
+                {
+                    ModelState.AddModelError("EditPassword.NewPassword", "Пароль должно иметь минимум 8 и максимум 20 символов.");
+                }
+            }
 
             if (ModelState.IsValid)
             {
@@ -220,13 +254,10 @@ namespace Simbirsoft_Weather.Controllers
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("EditPassword.NewPassword", error.Description);
-                    }
+                    ModelState.AddModelError("EditPassword.NewPassword", "Неверный пароль");
                 }
             }
-            ViewBag.Cities = Citydb.Cities.ToList();
+            ViewBag.Cities = Cities.ToList();
             loginViewModel.EditModel = new EditModel();
             loginViewModel.EditModel.AddUser(user);
             return View("login", loginViewModel);
@@ -240,6 +271,14 @@ namespace Simbirsoft_Weather.Controllers
         public async Task<IActionResult> EditEmail(LoginViewModel model)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated && user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+
+            string pattern = "[.\\-_a-z0-9]+@([a-z0-9][\\-a-z0-9]+\\.)+[a-z]{2,6}";
+            
             if (model.EditModel.Password == null)
             {
                 ModelState.AddModelError("EditModel.Password", "Не правильный пароль");
@@ -267,6 +306,12 @@ namespace Simbirsoft_Weather.Controllers
                 {
                     ModelState.AddModelError("EditModel.Email", "Почта уже занята");
                 }
+
+                if (!Regex.IsMatch(model.EditModel.Email.Trim(), pattern, RegexOptions.IgnoreCase))
+                {
+                    ModelState.AddModelError("EditModel.Email", "Некорректный адрес");
+                }
+                
             }
             if (ModelState.IsValid)
             {
@@ -285,7 +330,7 @@ namespace Simbirsoft_Weather.Controllers
                 }
 
             }
-            ViewBag.Cities = Citydb.Cities.ToList();
+            ViewBag.Cities = Cities.ToList();
 
             model.EditModel.AddUser(user);
             return View("login", model);
@@ -295,6 +340,7 @@ namespace Simbirsoft_Weather.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+
             var model = loginViewModel.LoginModel;
             if (ModelState.IsValid)
             {

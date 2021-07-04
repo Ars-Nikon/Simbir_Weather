@@ -10,14 +10,17 @@ namespace Simbirsoft_Weather.Models
     {
         public string Region { get; set; }
 
+        public string ErrorMessege { get; set; }
+
         public string Result { get; set; }
 
         public List<ForecastView> Weathers { get; set; }
 
         public Dictionary<string, ForecastData> WeatherForTime { get; set; }
 
+        public Person ClothesMan { get; set; }
 
-     
+        public Person ClothesWoman { get; set; }
 
         public readonly Dictionary<int, string> DayOfWeek = new Dictionary<int, string>()
         {{1, "Понедельник"},
@@ -30,7 +33,7 @@ namespace Simbirsoft_Weather.Models
          };
 
 
-        
+
 
 
     }

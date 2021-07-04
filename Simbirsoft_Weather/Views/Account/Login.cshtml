@@ -4,125 +4,125 @@
 
 @if (User.Identity.IsAuthenticated)
 {<div class="container">
-    <h1 class="text-center">Добрый день @Model.EditModel?.Name</h1>
-    @if (Model.EditModel.Result != null)
-    {
-        <h1 class="text-left  text-success">@Model.EditModel.Result</h1>
-    }
-    <fieldset class="form-group">
-        <h2 class="text-left">Изменить Имя</h2>
-        <form method="post" asp-controller="Account" asp-action="EditName">
-            <fieldset class="form-group">
-                <label asp-for="@Model.EditModel.Name">Имя</label><br />
-                <input asp-for="@Model.EditModel.Name" autocomplete="off" />
-                <span class="text-danger" asp-validation-for="EditModel.Name"></span>
-            </fieldset>
-            <div>
+        <h1 class="text-center">Добрый день @Model.EditModel?.Name</h1>
+        @if (Model.EditModel.Result != null)
+        {
+            <h1 class="text-left  text-success">@Model.EditModel.Result</h1>
+        }
+        <fieldset class="form-group">
+            <h2 class="text-left">Изменить Имя</h2>
+            <form method="post" asp-controller="Account" asp-action="EditName">
+                <fieldset class="form-group">
+                    <label asp-for="@Model.EditModel.Name">Имя</label><br />
+                    <input asp-for="@Model.EditModel.Name" maxlength="20" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="EditModel.Name"></span>
+                </fieldset>
+                <div>
+                    <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+                </div>
+            </form>
+        </fieldset>
+        <fieldset class="form-group">
+            <h2 class="text-left">Изменить Пол</h2>
+            <form method="post" asp-controller="Account" asp-action="EditGender">
+                <div>
+                    <label asp-for="@Model.EditModel.Gender">Женский</label>
+                    <input type="radio" asp-for="@Model.EditModel.Gender" value="false">
+                    <label asp-for="@Model.EditModel.Gender">Мужской</label>
+                    <input type="radio" asp-for="@Model.EditModel.Gender" value="true" />
+                </div>
+                <div>
+                    <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+                </div>
+            </form>
+        </fieldset>
+        <fieldset class="form-group">
+            <h2 class="text-left">Изменить Город</h2>
+            <form method="post" asp-controller="Account" asp-action="EditRegion">
+                <fieldset class="form-group">
+                    <label asp-for="EditModel.Region" class="form-label">Город</label>
+                    <input type="text" list="Region1" maxlength="20" asp-for="EditModel.Region" class="form-control" />
+                    <datalist id="Region1">
+                        @foreach (var item in ViewBag.Cities)
+                        {
+                            <option>@item.City_Ru</option>
+                        }
+                    </datalist>
+                    <span class="text-danger" asp-validation-for="EditModel.Region"></span>
+                </fieldset>
+                <div>
+                    <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
+                </div>
+            </form>
+        </fieldset>
+        <fieldset class="form-group">
+            <h2 class="text-left">Изменить Почту</h2>
+            <form method="post" asp-controller="Account" asp-action="EditEmail">
+                <fieldset class="form-group">
+                    <label asp-for="@Model.EditModel.Email">е-mail</label><br />
+                    <input type="email" maxlength="30" asp-for="@Model.EditModel.Email" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="@Model.EditModel.Email"></span>
+                </fieldset>
+                <fieldset class="form-group">
+                    <div>
+                        <label asp-for="@Model.EditModel.Password">Подтвердите пароль для смены e-mail</label><br />
+                        <input id="password-input" autocomplete="off" type="password" maxlength="20" asp-for="@Model.EditModel.Password" />
+                        <span class="text-danger" asp-validation-for="@Model.EditModel.Password"></span>
+                        <br />
+                    </div>
+                    <div>
+                        <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
+                    </div>
+                </fieldset>
                 <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
-            </div>
-        </form>
-    </fieldset>
-    <fieldset class="form-group">
-        <h2 class="text-left">Изменить Пол</h2>
-        <form method="post" asp-controller="Account" asp-action="EditGender">
-            <div>
-                <label asp-for="@Model.EditModel.Gender">Женский</label>
-                <input type="radio" asp-for="@Model.EditModel.Gender" value="true">
-                <label asp-for="@Model.EditModel.Gender">Мужской</label>
-                <input type="radio" asp-for="@Model.EditModel.Gender" value="false" />
-            </div>
-            <div>
+            </form>
+        </fieldset>
+        <fieldset class="form-group">
+            <h2 class="text-left">Изменить пароль</h2>
+            <form method="post" asp-controller="Account" asp-action="EditPassword">
+                <fieldset class="form-group">
+                    <label asp-for="@Model.EditPassword.NewPassword">Новый Пароль</label><br />
+                    <input type="password"  maxlength="20" asp-for="@Model.EditPassword.NewPassword" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="@Model.EditPassword.NewPassword"></span>
+                </fieldset>
+                <fieldset class="form-group">
+                    <div>
+                        <label asp-for="@Model.EditPassword.Password">Старый Пароль</label><br />
+                        <input id="password-input2" maxlength="20" autocomplete="off" type="password" asp-for="@Model.EditPassword.Password" />
+                        <span class="text-danger" asp-validation-for="@Model.EditPassword.Password"></span>
+                        <br />
+                    </div>
+                    <div>
+                        <label><input type="checkbox" class="password-checkbox2">Показать пароль</label>
+                    </div>
+                </fieldset>
                 <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
-            </div>
-        </form>
-    </fieldset>
-    <fieldset class="form-group">
-        <h2 class="text-left">Изменить Город</h2>
-        <form method="post" asp-controller="Account" asp-action="EditRegion">
-            <fieldset class="form-group">
-                <label asp-for="EditModel.Region" class="form-label">Город</label>
-                <input type="text" list="Region1" asp-for="EditModel.Region" class="form-control" />
-                <datalist id="Region1">
-                    @foreach (var item in ViewBag.Cities)
-                    {
-                        <option>@item.City_Ru</option>
-                    }
-                </datalist>
-                <span class="text-danger" asp-validation-for="EditModel.Region"></span>
-            </fieldset>
-            <div>
-                <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
-            </div>
-        </form>
-    </fieldset>
-    <fieldset class="form-group">
-        <h2 class="text-left">Изменить Почту</h2>
-        <form method="post" asp-controller="Account" asp-action="EditEmail">
-            <fieldset class="form-group">
-                <label asp-for="@Model.EditModel.Email">е-mail</label><br />
-                <input type="email" asp-for="@Model.EditModel.Email" autocomplete="off" />
-                <span class="text-danger" asp-validation-for="@Model.EditModel.Email"></span>
-            </fieldset>
-            <fieldset class="form-group">
-                <div>
-                    <label asp-for="@Model.EditModel.Password">Подтвердите пароль для смены e-mail</label><br />
-                    <input id="password-input" autocomplete="off" type="password" asp-for="@Model.EditModel.Password" />
-                    <span class="text-danger" asp-validation-for="@Model.EditModel.Password"></span>
-                    <br />
-                </div>
-                <div>
-                    <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
-                </div>
-            </fieldset>
-            <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
-        </form>
-    </fieldset>
-    <fieldset class="form-group">
-        <h2 class="text-left">Изменить пароль</h2>
-        <form method="post" asp-controller="Account" asp-action="EditPassword">
-            <fieldset class="form-group">
-                <label asp-for="@Model.EditPassword.NewPassword">Новый Пароль</label><br />
-                <input type="password" asp-for="@Model.EditPassword.NewPassword" autocomplete="off" />
-                <span class="text-danger" asp-validation-for="@Model.EditPassword.NewPassword"></span>
-            </fieldset>
-            <fieldset class="form-group">
-                <div>
-                    <label asp-for="@Model.EditPassword.Password">Старый Пароль</label><br />
-                    <input id="password-input2" autocomplete="off" type="password" asp-for="@Model.EditPassword.Password" />
-                    <span class="text-danger" asp-validation-for="@Model.EditPassword.Password"></span>
-                    <br />
-                </div>
-                <div>
-                    <label><input type="checkbox" class="password-checkbox2">Показать пароль</label>
-                </div>
-            </fieldset>
-            <input class="btn btn-info btn-lg pull-left" type="submit" autocomplete="off" value="Изменить" />
-        </form>
-    </fieldset>
-    <div>
-        <form asp-action="Logout" asp-controller="Account" method="post">
-            <input class="btn btn-info btn-lg pull-right" type="submit" autocomplete="off" value="Выход" />
-        </form>
+            </form>
+        </fieldset>
+        <div>
+            <form asp-action="Logout" asp-controller="Account" method="post">
+                <input class="btn btn-info btn-lg pull-right" type="submit" autocomplete="off" value="Выход" />
+            </form>
+        </div>
     </div>
-</div>
 
 }
 else
 {
     <div class="container">
-        <form method="post" asp-controller="Account" asp-action="Login"  asp-route-returnUrl="@Model.ReturnUrl">
+        <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
 
             <div asp-validation-summary="All"></div>
 
             <fieldset class="form-group">
                 <label asp-for="@Model.LoginModel.Email"></label><br />
-                <input type="email" asp-for="@Model.LoginModel.Email" autocomplete="off" />
+                <input type="email" maxlength="40" asp-for="@Model.LoginModel.Email" autocomplete="off" />
                 <span asp-validation-for="@Model.LoginModel.Email"></span>
             </fieldset>
 
             <fieldset class="form-group">
                 <label asp-for="@Model.LoginModel.Password"></label><br />
-                <input type="password" id="password-input" autocomplete="off" asp-for="@Model.LoginModel.Password">
+                <input type="password" maxlength="20" id="password-input" autocomplete="off" asp-for="@Model.LoginModel.Password">
                 <label><input type="checkbox" class="password-checkbox">Показать пароль</label>
                 <br />
 

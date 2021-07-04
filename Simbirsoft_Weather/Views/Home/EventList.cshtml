@@ -1,0 +1,72 @@
+﻿@{
+}
+@model Simbirsoft_Weather.Models.EventListModel
+
+<div class="container">
+    @if (Model.Events.Count == 0)
+    {
+        <h1 class="text-info text-center">У вас нет запланированных событий</h1>
+    }
+    else
+    {
+        @if (Model.ErrorMessege != null)
+        {
+            <h1 class="text-danger">@Model.ErrorMessege</h1>
+        }
+        <form method="post">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Название события</th>
+                        <th scope="col">Город</th>
+                        <th scope="col">Дата события</th>
+                        <th scope="col">Дата уведомления</th>
+                        <th scope="col">Статус</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var Event in Model.Events)
+                    {
+
+                        <tr>
+                            <td>@Event?.NameEvent</td>
+                            <td>@Event?.Region</td>
+                            <td>@Event?.DateEvent.Value.ToString("M", new CultureInfo("ru-RU"))</td>
+                            <td>@Event?.DateSendMessage.Value.ToString("f", new CultureInfo("ru-RU"))</td>
+                            @if (Event.CancellationStatus)
+                            {
+                                <td><h3 class="text-danger">Отменён</h3></td>
+                            }
+                            else
+                            {
+                                if (Event.Done)
+                                {
+                                    <td><h3 class="text-info">Выполнено</h3></td>
+                                }
+                                else
+                                {
+                                    <td><h3 class="text-primary">В процессе</h3></td>
+                                }
+                                <td>
+                                    @if (!Event.Done && !Event.CancellationStatus)
+                                    {
+                                        <button asp-action="EditEvent" asp-route-Id="@Event.Id" type="submit">Изменить</button>
+                                        <button type="submit" class="btn-danger" asp-action="CancellationEvent" asp-route-Id="@Event.Id">Отменить</button>
+                                    }           
+                                </td>
+                            }
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </form>
+
+
+
+
+
+    }
+</div>

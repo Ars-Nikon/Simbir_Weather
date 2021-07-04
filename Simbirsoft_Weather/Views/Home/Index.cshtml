@@ -9,8 +9,12 @@
         {
             <h1 class="text-left  text-success">@Model.Result</h1>
         }
+        @if (Model.ErrorMessege != null)
+        {
+            <h1 class="text-left  text-danger">@Model.ErrorMessege</h1>
+        }
         <form asp-action="Index" class="find-location">
-            <input type="text" list="Region1" asp-for="Region" class="form-control" />
+            <input type="text" autocomplete="off" maxlength="30" list="Region1" asp-for="Region" class="form-control" />
             <datalist id="Region1">
                 @foreach (var item in ViewBag.Cities)
                 {
@@ -28,7 +32,7 @@
             <div class="today forecast">
                 <div class="forecast-header">
                     <div class="day">@Model.DayOfWeek.GetValueOrDefault((int)Model.Weathers[0].Date.DayOfWeek)</div>
-                    <div class="date">@Model.Weathers[0].Date.ToString("M",ru)</div>
+                    <div class="date">@Model.Weathers[0].Date.ToString("M", ru)</div>
                 </div> <!-- .forecast-header -->
                 <div class="forecast-content">
                     <div class="location">@Model.Region</div>
@@ -39,6 +43,7 @@
                         </div>
                     </div>
                     <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)Model.Weathers[0].SpeedWind) м/с</span>
+                    <span><img src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(Model.Weathers[0].ProbabilityRain *100)) %</span>
                     <br />
                     <h2>@Model.Weathers[0].Main</h2>
                 </div>
@@ -57,10 +62,13 @@
                             <icon icon="@day.Icon"></icon>
                         </div>
                         <div class="degree">@(Math.Round(day.Maxtemp))<sup>o</sup>C</div>
-                        <small>18<sup>o</sup></small>
+                        <small>@Math.Round(day.Mintemp) <sup>o</sup></small>
                     </div>
-                    <span><img src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
-
+                    <div style="text-align:center">
+                        <span><img style="padding:0 5px 0 5px" src="~/WeatherFront/images/icon-wind.png" alt="">@((int)day.SpeedWind) м/с</span>
+                        <span></span>
+                        <span><img style="padding:0 5px 0 5px" src="~/WeatherFront/images/icon-umberella.png" alt="">@((int)(day.ProbabilityRain *100)) %</span>
+                    </div>
                 </div>
             }
         </div>
@@ -96,29 +104,218 @@
     <table class="table table-dark">
         <thead>
             <tr>
-                <th scope="col">Clothes</th>
-                <th scope="col">Woman</th>
-                <th scope="col">Man</th>
+                <th scope="col">Одежда</th>
+                <th scope="col">Женская</th>
+                <th scope="col">Мужская</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>-----</td>
-                <td>-----</td>
-                <td>-----</td>
-
+                <td>Головной убор</td>
+                <td>
+                    @if (Model.ClothesWoman != null)
+                    {
+                        @if (Model.ClothesWoman.Head.Count == 1 && Model.ClothesWoman.Head.First().Name == "-----")
+                        {
+                            @Model.ClothesWoman.Head.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesWoman.Head)
+                                {
+                                    clothe.ForWhom = ForWhom.Woman;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Head.Count == 1 && Model.ClothesMan.Head.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Head.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.Head)
+                                {
+                                    clothe.ForWhom = ForWhom.Man;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
-                <td>-----</td>
-                <td>-----</td>
-                <td>-----</td>
+                <td>Верхняя одежда</td>
+                <td>
+                    @if (Model.ClothesWoman != null)
+                    {
+                        @if (Model.ClothesWoman.BodyTop.Count == 1 && Model.ClothesWoman.BodyTop.First().Name == "-----")
+                        {
+                            @Model.ClothesWoman.BodyTop.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesWoman.BodyTop)
+                                {
+                                    clothe.ForWhom = ForWhom.Woman;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.BodyTop.Count == 1 && Model.ClothesMan.BodyTop.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.BodyTop.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.BodyTop)
+                                {
+                                    clothe.ForWhom = ForWhom.Man;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
             <tr>
-                <td>-----</td>
-                <td>-----</td>
-                <td>-----</td>
+                <td>Нижняя одежда</td>
+                <td>
+                    @if (Model.ClothesWoman != null)
+                    {
+                        @if (Model.ClothesWoman.BodyBottom.Count == 1 && Model.ClothesWoman.BodyBottom.First().Name == "-----")
+                        {
+                            @Model.ClothesWoman.BodyBottom.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesWoman.BodyBottom)
+                                {
+                                    clothe.ForWhom = ForWhom.Woman;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.BodyBottom.Count == 1 && Model.ClothesMan.BodyBottom.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.BodyBottom.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.BodyBottom)
+                                {
+                                    clothe.ForWhom = ForWhom.Man;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Обувь</td>
+                <td>
+                    @if (Model.ClothesWoman != null)
+                    {
+                        @if (Model.ClothesWoman.Legs.Count == 1 && Model.ClothesWoman.Legs.First().Name == "-----")
+                        {
+                            @Model.ClothesWoman.Legs.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesWoman.Legs)
+                                {
+                                    clothe.ForWhom = ForWhom.Woman;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Legs.Count == 1 && Model.ClothesMan.Legs.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Legs.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.Legs)
+                                {
+                                    clothe.ForWhom = ForWhom.Man;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Другое</td>
+                <td>
+                    @if (Model.ClothesWoman != null)
+                    {
+                        @if (Model.ClothesWoman.Other.Count == 1 && Model.ClothesWoman.Other.First().Name == "-----")
+                        {
+                            @Model.ClothesWoman.Other.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesWoman.Other)
+                                {
+                                    clothe.ForWhom = ForWhom.Woman;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (Model.ClothesMan != null)
+                    {
+                        @if (Model.ClothesMan.Other.Count == 1 && Model.ClothesMan.Other.First().Name == "-----")
+                        {
+                            @Model.ClothesMan.Other.First().Name
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var clothe in Model.ClothesMan.Other)
+                                {
+                                    clothe.ForWhom = ForWhom.Man;
+                                    <li>  @await Component.InvokeAsync("UrlRecClothes", @clothe)</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
             </tr>
         </tbody>
     </table>
- 
+
 </div>

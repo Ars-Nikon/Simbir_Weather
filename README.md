@@ -41,15 +41,11 @@ Deploying projects:
 
 ## Used libraries
 ### Simbirsoft_Weather
-* [Dadata](https://github.com/hflabs/dadata-csharp) v21.3.0
 * [EntityFramework](https://github.com/dotnet/ef6/wiki) v6.4.4
 * [MailKit](http://www.mimekit.net/) v2.13.0
-* [Microsoft.AspNetCore.HttpOverrides](https://asp.net/) v2.2.0
 * [Microsoft.AspNetCore.Identity.EntityFrameworkCore](https://asp.net/) v3.1.16
 * [Microsoft.EntityFrameworkCore](https://docs.microsoft.com/ru-ru/ef/core/) v3.1.16
 * [Microsoft.EntityFrameworkCore.SqlServer](https://docs.microsoft.com/ru-ru/ef/core/) v3.1.16
-* [Microsoft.jQuery.Unobtrusive.Validation](https://asp.net/) v3.2.12
-* [Npgsql.EntityFrameworkCore.PostgreSQL](https://github.com/npgsql/efcore.pg) v3.1.11
 
 ### Simbirsoft_Weather.Tests
 * [coverlet.collector](https://github.com/coverlet-coverage/coverlet) v1.3.0
